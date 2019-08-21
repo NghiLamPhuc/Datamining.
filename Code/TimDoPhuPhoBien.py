@@ -11,9 +11,7 @@ import os
 # 1
 #def get_input_from_file() -> List[List]:
 # 2. INPUT THEO KIỂU DICT: (ID, TRANSACTIONS). -> CHUYỂN VỀ BẢNG NHỊ PHÂN.
-# 2.1 Hàm lấy dict: (item: tần suất).
-# INPUT: dữ liệu dạng dictionary (id: {item1, item2, ...}).
-# OUTPUT: dictionary (item: frequency).
+# 2.1 Hàm lấy list tần suất theo thứ tự item.
 def get_unique_item_dict(inputDict: dict) -> dict:
     uniqueItem = dict()
     for (_, items) in inputDict.items():
@@ -41,20 +39,14 @@ def create_binary_table(inputDict: dict) -> list:
     (itemList, _) = get_item_list_and_count_total(inputDict)
     col = len(itemList)
     row = len(inputDict)
-    table = [[' 0' for r in range(col + 1)] for c in range(row + 1)]
+    table = [[0 for r in range(col)] for c in range(row)]
     idList = list(inputDict.keys())
-
-    for item in range(col):
-        table[0][item + 1] = itemList[item]
-    for id in range(row):
-        table[id + 1][0] = idList[id]
-    table[0][0] = '  '
 
     for indexId in range(len(idList)):
         itemsAtId = inputDict[idList[indexId]]
         for indexItem in range(len(itemList)):
             if itemList[indexItem] in itemsAtId:
-                table[indexId + 1][indexItem + 1] = ' 1'
+                table[indexId][indexItem] = 1
     return table
 ############################################# HÀM XỬ LÝ INPUT.
 
@@ -76,11 +68,12 @@ def create_binary_table(inputDict: dict) -> list:
 # 1.2 Hàm lọc item có tần suất >= minsup.
 def get_one_item_cover(inputDict: dict, minsup: float) -> set:
     oneItemCount = get_unique_item_dict(inputDict)
+    (itemList, _) = get_item_list_and_count_total(inputDict)
     minOccur = round(minsup * len(oneItemCount))
     oneCover = list()
     for (item, count) in oneItemCount.items():
         if count >= minOccur:
-            oneCover.append(item)
+            oneCover.append(itemList.index(item))
     return sorted(oneCover)
     
 ############################################# HÀM LẤY TẬP PHỔ BIẾN 1 PHẦN TỬ.
@@ -122,10 +115,10 @@ def main():
     inputDict = {'O1': ['i1', 'i7', 'i8'], 'O2': ['i1', 'i2', 'i6', 'i7', 'i8'], 'O3': ['i1', 'i2', 'i6', 'i7'], 'O4': ['i1', 'i8', 'i7'], 'O5': ['i3', 'i4', 'i5', 'i6', 'i8'], 'O6': ['i1', 'i4', 'i5']}
 
     table = create_binary_table(inputDict)
-    #print(*table, sep = '\n')
+    print(*table, sep = '\n')
     #(items, total) = get_item_list_and_count_total(inputDict)
     oneCover = get_one_item_cover(inputDict, minsup)
     print(oneCover)
     
-
+    
 if __name__ == "__main__": main()
