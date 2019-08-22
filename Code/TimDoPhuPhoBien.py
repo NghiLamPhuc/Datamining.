@@ -1,5 +1,7 @@
 ############################################# IMPORT
 from collections import defaultdict
+import itertools
+
 import pandas as pd
 import os
 ############################################# IMPORT
@@ -66,41 +68,40 @@ def create_binary_table(inputDict: dict) -> list:
 #                    oneItemCount[table[0][indexItem]] += 1
 #    return oneItemCount
 # 1.2 Hàm lọc item có tần suất >= minsup.
-def get_one_item_cover(inputDict: dict, minsup: float) -> set:
+def get_one_item_cover(inputDict: dict, minsup: float) -> list:
     oneItemCount = get_unique_item_dict(inputDict)
     (itemList, _) = get_item_list_and_count_total(inputDict)
-    minOccur = round(minsup * len(oneItemCount))
+    minOccur = round(minsup * len(inputDict)) # minsup = frequency(item)/number of ID.
     oneCover = list()
     for (item, count) in oneItemCount.items():
+        itemSet = list()
         if count >= minOccur:
-            oneCover.append(itemList.index(item))
+            itemSet.append(itemList.index(item))
+            oneCover.append(itemSet)
     return sorted(oneCover)
     
 ############################################# HÀM LẤY TẬP PHỔ BIẾN 1 PHẦN TỬ.
 
 ############################################# HÀM LẤY TẬP PHỔ BIẾN >= 2 PHẦN TỬ.
 # 1. TẠO CÁC TẬP ỨNG VIÊN K PHẦN TỬ, TỪ TẬP PHỦ PHỔ BIẾN K-1 PHẦN TỬ.
-# INPUT: list các Itemset k phần tử.
+# INPUT: list các Itemset 1 phần tử và số thứ k+1.
 # OUTPUT: list các Itemset k+1 phần tử.
-# Duyệt các itemset trong list k phần tử. 0 -> (n - 1)
-# Duyệt các itemset sau đó, cắt itemset sau đó thành list các item. (để ghép với itemset bên trên).
-# Nếu item mới đã có trong itemset trước đó, thì không ghép. Và ngược lại, ghép.
-def generate_next_item_set_from_previous_item_set(prevItemSet: list) -> list:
-    nextItemSet = list()
-    nextItemSetString = list()
-    lenOfNextItemSet = len(prevItemSet[0].split())
-    totalPrevItemSet = len(prevItemSet)
-    for indexPrevSet in range(totalPrevItemSet - 1):
-        for indexNextSet in range(indexPrevSet, totalPrevItemSet):
-            nextItemList = prevItemSet[indexNextSet].split()
-            for indexItem in range(lenOfNextItemSet):
-                if nextItemList[indexItem] not in prevItemSet[indexPrevSet]:
-                    newSetString = prevItemSet[indexPrevSet] + ' ' + nextItemList[indexItem]
-                    if newSetString not in nextItemSetString:
-                        nextItemSetString.append(newSetString)
-    
-    return nextItemSetString
-    
+# 
+# 
+# 
+def generate_k_1_item_set_from_one_item_set(itemSetK: list, k_1: int) -> list:
+    listOfCombine = list()
+    lenOfSetK = len(itemSetK[0])
+
+    for length in range(lenOfSetK + k_1 - 1, lenOfSetK + k_1):
+        for subset in itertools.combinations(itemSetK, length):
+            listOfCombine.append(list(subset))
+
+    itemSetK_1 = list()
+    for lst in listOfCombine:
+        itemSetK_1.append([j for sub in lst for j in sub])
+        
+    return itemSetK_1
 
 # 2. ĐẾM TẦN SUẤT CÁC TẬP K PHẦN TỬ ĐÓ.
 # 3. LOẠI BỎ TẬP CÓ TẦN SUẤT < MINSUP.
@@ -115,10 +116,14 @@ def main():
     inputDict = {'O1': ['i1', 'i7', 'i8'], 'O2': ['i1', 'i2', 'i6', 'i7', 'i8'], 'O3': ['i1', 'i2', 'i6', 'i7'], 'O4': ['i1', 'i8', 'i7'], 'O5': ['i3', 'i4', 'i5', 'i6', 'i8'], 'O6': ['i1', 'i4', 'i5']}
 
     table = create_binary_table(inputDict)
-    print(*table, sep = '\n')
+    #print(*table, sep = '\n')
     #(items, total) = get_item_list_and_count_total(inputDict)
     oneCover = get_one_item_cover(inputDict, minsup)
-    print(oneCover)
+    #print(oneCover)
+    for k in range(2, len(oneCover) + 1):
+        kCount = generate_k_1_item_set_from_one_item_set(oneCover, k)
+        print(kCount)
+        print()
     
     
 if __name__ == "__main__": main()
