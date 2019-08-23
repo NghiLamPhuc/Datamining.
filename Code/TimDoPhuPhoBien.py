@@ -53,33 +53,24 @@ def create_binary_table(inputDict: dict) -> list:
 ############################################# HÀM XỬ LÝ INPUT.
 
 ############################################# HÀM LẤY TẬP PHỔ BIẾN 1 ITEM.
-# 1.1 Hàm lấy tần suất của 1 item.
-# INPUT: 2d list, dòng là các id, cột là các item. Xuất hiện là 1, ngược lại 0.
-# OUTPUT: dictionary (item: frequency)
-# Hàm này trùng hàm get_unique_item_dict
-#def get_one_item_count(table: list) -> dict:
-#    oneItemCount = dict()
-#    for indexItem in range(1, len(table[0])):
-#        for indexId in range(1, len(table)):
-#            if table[indexId][indexItem] == ' 1':
-#                if table[0][indexItem] not in oneItemCount:
-#                   oneItemCount[table[0][indexItem]] = 1
-#                else:
-#                    oneItemCount[table[0][indexItem]] += 1
-#    return oneItemCount
-# 1.2 Hàm lọc item có tần suất >= minsup.
-def get_one_item_cover(inputDict: dict, minsup: float) -> list:
-    oneItemCount = get_unique_item_dict(inputDict)
-    (itemList, _) = get_item_list_and_count_total(inputDict)
-    minOccur = round(minsup * len(inputDict)) # minsup = frequency(item)/number of ID.
-    oneCover = list()
-    for (item, count) in oneItemCount.items():
-        itemSet = list()
+# Hàm lọc item có tần suất >= minsup.
+# itemset là tập phủ phổ biến. (sau khi so minsup).
+# Những tập kết hợp gọi là possibleSet.
+def get_one_item_set(table: list, minsup: float) -> list:
+    numOfId = len(table)
+    numOfItem = len(table[0])
+    oneItemSet = list()
+    minOccur = round(minsup * numOfId) # minsup = frequency(item) / total Id.
+    for item in range(numOfItem):
+        count = 0
+        listItem = list()
+        for id in range(numOfId):
+            if table[id][item] == 1:
+                count += 1
         if count >= minOccur:
-            itemSet.append(itemList.index(item))
-            oneCover.append(itemSet)
-    return sorted(oneCover)
-    
+            listItem.append(item)
+            oneItemSet.append(listItem)
+    return oneItemSet
 ############################################# HÀM LẤY TẬP PHỔ BIẾN 1 PHẦN TỬ.
 
 ############################################# HÀM LẤY TẬP PHỔ BIẾN >= 2 PHẦN TỬ.
@@ -89,22 +80,74 @@ def get_one_item_cover(inputDict: dict, minsup: float) -> list:
 # 
 # 
 # 
-def generate_k_1_item_set_from_one_item_set(itemSetK: list, k_1: int) -> list:
-    listOfCombine = list()
-    lenOfSetK = len(itemSetK[0])
+#def generate_k_1_item_set_from_one_item_set(itemSetK: list, k_1: int) -> list:
+#    listOfCombine = list()
+#    lenOfSetK = len(itemSetK[0])
 
-    for length in range(lenOfSetK + k_1 - 1, lenOfSetK + k_1):
-        for subset in itertools.combinations(itemSetK, length):
-            listOfCombine.append(list(subset))
+#    for length in range(lenOfSetK + k_1 - 1, lenOfSetK + k_1):
+#        for subset in itertools.combinations(itemSetK, length):
+#            listOfCombine.append(list(subset))
 
-    itemSetK_1 = list()
-    for lst in listOfCombine:
-        itemSetK_1.append([j for sub in lst for j in sub])
+#    itemSetK_1 = list()
+#    for lst in listOfCombine:
+#        itemSetK_1.append([j for sub in lst for j in sub])
         
+#    return itemSetK_1
+def get_item_set_k_1(table: list, itemSetK: list, minsup: float) -> list:
+    if len(itemSetK) == 0:
+        return 'Het roi!'
+    
+    itemSetK_1 = list() # lưu itemset có k+1 phần tử.
+    numOfSet = len(itemSetK) # số itemset có k phần tử.
+    numOfItem = len(itemSetK[0]) # số phần tử trong một itemset.
+
+    # kết hợp itemset trước, với từng item trong các itemset sau.
+    
+    for curr in range(numOfSet - 1):
+        listAdd = list() # đánh dấu các addItem đã thêm vào itemset hay chưa.
+        for next in range(curr + 1, numOfSet):
+            for item in range(numOfItem):
+                addItem = itemSetK[next][item]
+                if addItem not in listAdd: # kiểm tra addItem đã từng thêm vào itemset chưa.
+                    if addItem not in itemSetK[curr]: # kiểm tra addItem có trùng với item nào trong itemset hay không.
+                        possibleSet = itemSetK[curr].copy()
+                        possibleSet.append(addItem)
+                        checkPossible = 0
+                        for newSet in itemSetK_1:
+                            if set(possibleSet) == set(newSet): # kiểm tra possibleSet đã tồn tại chưa.
+                                checkPossible = 1
+                                break
+                        if (checkPossible == 0) and check_itemset_minsup(table, possibleSet, minsup): # đếm tần suất của bộ mới tạo, có thỏa minsup thì lấy.
+                            itemSetK_1.append(possibleSet)
+                            listAdd.append(addItem)
     return itemSetK_1
 
-# 2. ĐẾM TẦN SUẤT CÁC TẬP K PHẦN TỬ ĐÓ.
-# 3. LOẠI BỎ TẬP CÓ TẦN SUẤT < MINSUP.
+# Hàm đếm tần suất của một tập thỏa minsup hay không.
+def check_itemset_minsup(table: list, itemSet: list, minsup: float) -> bool:
+    if len(itemSet) == 0:
+        return False
+    
+    numOfId = len(table)
+    numOfItemInSet = len(itemSet)
+    minOccur = round(minsup * numOfId)
+    count = 0
+    # duyệt theo dòng, mỗi dòng, duyệt theo item trong itemSet
+    for id in range(numOfId):
+        sumId = 0
+        for item in itemSet:
+            if table[id][item] == 1:
+                sumId += 1
+        if sumId == numOfItemInSet:
+            count += 1
+        if count >= minOccur:
+            return True
+    
+    return False
+
+# 2. ĐẾM TẦN SUẤT CÁC TẬP K PHẦN TỬ ĐÓ; LOẠI BỎ TẬP CÓ TẦN SUẤT < MINSUP.
+#def collect_item_set_after_minsup(itemSet: list, minsup: float) -> list:
+    
+
 ############################################# HÀM LẤY TẬP PHỔ BIẾN >= 2 PHẦN TỬ.
 
 
@@ -117,13 +160,13 @@ def main():
 
     table = create_binary_table(inputDict)
     #print(*table, sep = '\n')
-    #(items, total) = get_item_list_and_count_total(inputDict)
-    oneCover = get_one_item_cover(inputDict, minsup)
-    #print(oneCover)
-    for k in range(2, len(oneCover) + 1):
-        kCount = generate_k_1_item_set_from_one_item_set(oneCover, k)
-        print(kCount)
-        print()
-    
-    
+    preCover = get_one_item_set(table, minsup)
+    while len(preCover) >= 1:
+        nextCover = get_item_set_k_1(table, preCover, minsup)
+        print(preCover)
+        preCover = nextCover
+        
+
+
+ 
 if __name__ == "__main__": main()
