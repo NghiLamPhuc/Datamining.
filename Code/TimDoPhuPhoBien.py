@@ -148,16 +148,26 @@ def apriori(table: list, minsup: float) -> list:
     allMaxItemSet.append(allItemSet[-1])
     return allMaxItemSet
 
+# Hàm lấy tên item từ tập phủ phổ biến tối đại.
+def get_item_name(itemList: list, maxItemSet: list) -> list:
+    allMaxItemSetName = list()
+    for indexSet in range(len(maxItemSet)):
+        nameSet = list()
+        for item in maxItemSet[indexSet]:
+            nameSet.append(itemList[item])
+        allMaxItemSetName.append(nameSet)
+    return allMaxItemSetName
 ############################################# HÀM MAIN.
 
 def main():
     minsup = 0.3
     #inputDict = {100: ['A', 'C', 'D', 'I'], 200: ['A', 'C', 'I'], 300: ['C', 'E', 'I'], 400: ['A', 'B', 'D', 'E'], 500: ['B', 'D', 'I'], 600: ['A', 'B', 'D', 'E']}
     inputDict = {'O1': ['i1', 'i7', 'i8'], 'O2': ['i1', 'i2', 'i6', 'i7', 'i8'], 'O3': ['i1', 'i2', 'i6', 'i7'], 'O4': ['i1', 'i8', 'i7'], 'O5': ['i3', 'i4', 'i5', 'i6', 'i8'], 'O6': ['i1', 'i4', 'i5']}
+    #inputDict = {'t1': [1, 3, 4], 't2': [2, 3, 5], 't3': [1,2,3,5], 't4':[2,5],'t5':[1,2,3,5]}
 
     table = create_binary_table(inputDict)
     #print(*table, sep = '\n')
-    #(itemList, _) = get_item_list_and_count_total(inputDict)
+    (itemList, _) = get_item_list_and_count_total(inputDict)
     #print(itemList)
     #preCover = get_one_item_set(table, minsup)
     #print(preCover)
@@ -165,7 +175,10 @@ def main():
     #    nextCover = get_item_set_k_1(table, preCover, minsup)
     #    print(preCover)
     #    preCover = nextCover
-    print(apriori(table, minsup))
-
+    
+    maxItemSet = apriori(table, minsup)
+    print(maxItemSet)
+    print(get_item_name(itemList, maxItemSet))
+    
  
 if __name__ == "__main__": main()
