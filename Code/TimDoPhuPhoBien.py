@@ -122,6 +122,32 @@ def check_itemset_minsup(table: list, itemSet: list, minsup: float) -> bool:
             return True
     return False
 
+# Hàm lấy tất cả tập phủ phổ biến.
+# Đầu tiên, lấy tất cả tập phủ phổ biến.
+# Sau đó bỏ các tập bị tập khác phủ.
+def apriori(table: list, minsup: float) -> list:
+    allItemSet = list()
+    allMaxItemSet = list()
+    preCover = get_one_item_set(table, minsup)
+    while len(preCover) >= 1:
+        nextCover = get_item_set_k_1(table, preCover, minsup)
+        for itemSet in nextCover:
+            allItemSet.append(itemSet)
+        preCover = nextCover
+    for curr in range(len(allItemSet) - 1):
+        currSet = allItemSet[curr]
+        for next in range(curr + 1, len(allItemSet)):
+            nextSet = allItemSet[next]
+            check = False
+            if set(currSet).issubset(nextSet):
+                check = True
+                break
+        if not check:
+            allMaxItemSet.append(currSet)
+            
+    allMaxItemSet.append(allItemSet[-1])
+    return allMaxItemSet
+
 ############################################# HÀM MAIN.
 
 def main():
@@ -130,17 +156,16 @@ def main():
     inputDict = {'O1': ['i1', 'i7', 'i8'], 'O2': ['i1', 'i2', 'i6', 'i7', 'i8'], 'O3': ['i1', 'i2', 'i6', 'i7'], 'O4': ['i1', 'i8', 'i7'], 'O5': ['i3', 'i4', 'i5', 'i6', 'i8'], 'O6': ['i1', 'i4', 'i5']}
 
     table = create_binary_table(inputDict)
-    print(*table, sep = '\n')
+    #print(*table, sep = '\n')
     #(itemList, _) = get_item_list_and_count_total(inputDict)
     #print(itemList)
-    preCover = get_one_item_set(table, minsup)
-    #print(preC0ver)
-    while len(preCover) >= 1:
-        nextCover = get_item_set_k_1(table, preCover, minsup)
-        print(preCover)
-        preCover = nextCover
-        
-
+    #preCover = get_one_item_set(table, minsup)
+    #print(preCover)
+    #while len(preCover) >= 1:
+    #    nextCover = get_item_set_k_1(table, preCover, minsup)
+    #    print(preCover)
+    #    preCover = nextCover
+    print(apriori(table, minsup))
 
  
 if __name__ == "__main__": main()
