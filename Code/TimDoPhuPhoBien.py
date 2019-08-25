@@ -1,11 +1,21 @@
 ############################################# IMPORT
+from datetime import datetime
 from collections import defaultdict
 
 #import pandas as pd
-#import os
+import os
 ############################################# IMPORT
 ############################################# INPUT
-#
+def read_input_file(link , fileName) -> dict:
+    f = open(link + fileName, 'r')
+    inpDict = defaultdict(dict)
+    i = 0
+    for line in f:
+        line = line.rstrip()
+        line = sorted(line.split(','))
+        inpDict[i] = line
+        i += 1
+    return inpDict
 ############################################# INPUT
 ############################################# HÀM XỬ LÝ INPUT.
 # 1. INPUT THEO KIỂU BẢNG NHỊ PHÂN. (EXCEL).
@@ -159,6 +169,8 @@ def get_item_name(itemList: list, maxItemSet: list) -> list:
 ############################################# HÀM MAIN.
 
 def main():
+    start = datetime.now()
+
     minsup = 0.3
     #inputDict = {100: ['A', 'C', 'D', 'I'], 200: ['A', 'C', 'I'], 300: ['C', 'E', 'I'], 400: ['A', 'B', 'D', 'E'], 500: ['B', 'D', 'I'], 600: ['A', 'B', 'D', 'E']}
     inputDict = {'O1': ['i1', 'i7', 'i8'], 'O2': ['i1', 'i2', 'i6', 'i7', 'i8'], 'O3': ['i1', 'i2', 'i6', 'i7'], 'O4': ['i1', 'i8', 'i7'], 'O5': ['i3', 'i4', 'i5', 'i6', 'i8'], 'O6': ['i1', 'i4', 'i5']}
@@ -166,18 +178,25 @@ def main():
 
     table = create_binary_table(inputDict)
     #print(*table, sep = '\n')
-    (itemList, _) = get_item_list_and_count_total(inputDict)
+    #(itemList, _) = get_item_list_and_count_total(inputDict)
     #print(itemList)
-    #preCover = get_one_item_set(table, minsup)
-    #print(preCover)
-    #while len(preCover) >= 1:
-    #    nextCover = get_item_set_k_1(table, preCover, minsup)
-    #    print(preCover)
-    #    preCover = nextCover
     
-    maxItemSet = apriori(table, minsup)
-    print(maxItemSet)
-    print(get_item_name(itemList, maxItemSet))
+    #maxItemSet = apriori(table, minsup)
+    #print(maxItemSet)
+    #print(get_item_name(itemList, maxItemSet))
+    link_folder_train = 'D:\\Workspace\\DataMining\\Code\\'
     
- 
+    inpDict = read_input_file(link_folder_train, 'input.txt')
+    #print(inpDict)
+    (itemList, _) = get_item_list_and_count_total(inpDict)
+    #print(itemList,_)
+    #print(len(itemList))
+    table1 = create_binary_table(inpDict)
+    maxItemSet = apriori(table1, 0.03) # 43367 / 169 = 256; 256 / 9835 = 0.03
+    #print(*maxItemSet, sep = '\n')
+    print(*(get_item_name(itemList, maxItemSet)), sep = '\n')
+    
+
+    print (datetime.now()-start)
+    
 if __name__ == "__main__": main()
