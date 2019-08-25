@@ -50,14 +50,21 @@ def create_binary_table(inputDict: dict) -> list:
     (itemList, _) = get_item_list_and_count_total(inputDict)
     col = len(itemList)
     row = len(inputDict)
-    table = [[0 for r in range(col)] for c in range(row)]
+    table = [[0 for r in range(col + 1)] for c in range(row  + 1)]
     idList = list(inputDict.keys())
+
+    table[0][0] = ' '
+    for id in range(1, row + 1):
+        table[id][0] = idList[id - 1]
+    for item in range(1, col + 1):
+        table[0][item] = itemList[item - 1]
+    
 
     for indexId in range(len(idList)):
         itemsAtId = inputDict[idList[indexId]]
         for indexItem in range(len(itemList)):
             if itemList[indexItem] in itemsAtId:
-               table[indexId][indexItem] = 1
+               table[indexId + 1][indexItem + 1] = 1
     return table
 ############################################# HÀM XỬ LÝ INPUT.
 
@@ -70,10 +77,10 @@ def get_one_item_set(table: list, minsup: float) -> list:
     numOfItem = len(table[0])
     oneItemSet = list()
     minOccur = round(minsup * numOfId) # minsup = frequency(item) / total Id.
-    for item in range(numOfItem):
+    for item in range(1, numOfItem):
         count = 0
         listItem = list()
-        for id in range(numOfId):
+        for id in range(1, numOfId):
             if table[id][item] == 1:
                 count += 1
         if count >= minOccur:
@@ -155,19 +162,20 @@ def apriori(table: list, minsup: float) -> list:
             allMaxItemSet.append(currSet)
             
     allMaxItemSet.append(allItemSet[-1])
-    return allMaxItemSet
-
-# Hàm lấy tên item từ tập phủ phổ biến tối đại.
-def get_item_name(itemList: list, maxItemSet: list) -> list:
+    # lấy tên item.
     allMaxItemSetName = list()
-    for indexSet in range(len(maxItemSet)):
+    for indexSet in range(len(allMaxItemSet)):
         nameSet = list()
-        for item in maxItemSet[indexSet]:
-            nameSet.append(itemList[item])
+        for item in allMaxItemSet[indexSet]:
+            nameSet.append(table[0][item])
         allMaxItemSetName.append(nameSet)
-    return allMaxItemSetName
-############################################# HÀM MAIN.
+    return allMaxItemSetName#,allMaxItemSet
 
+# TÌM CÁC LUẬT KẾT HỢP.
+#def association_rule(table: list, maxItemSet: list, minconf: float) -> list:
+    
+
+############################################# HÀM MAIN.
 def main():
     start = datetime.now()
 
@@ -178,23 +186,20 @@ def main():
 
     table = create_binary_table(inputDict)
     #print(*table, sep = '\n')
-    #(itemList, _) = get_item_list_and_count_total(inputDict)
-    #print(itemList)
     
     #maxItemSet = apriori(table, minsup)
     #print(maxItemSet)
-    #print(get_item_name(itemList, maxItemSet))
+    
     link_folder_train = 'D:\\Workspace\\DataMining\\Code\\'
     
     inpDict = read_input_file(link_folder_train, 'input.txt')
     #print(inpDict)
-    (itemList, _) = get_item_list_and_count_total(inpDict)
+    #(itemList, _) = get_item_list_and_count_total(inpDict)
     #print(itemList,_)
     #print(len(itemList))
     table1 = create_binary_table(inpDict)
     maxItemSet = apriori(table1, 0.03) # 43367 / 169 = 256; 256 / 9835 = 0.03
-    #print(*maxItemSet, sep = '\n')
-    print(*(get_item_name(itemList, maxItemSet)), sep = '\n')
+    print(*maxItemSet, sep = '\n')
     
 
     print (datetime.now()-start)
