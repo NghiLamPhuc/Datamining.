@@ -53,19 +53,20 @@ def create_binary_table(inputDict: dict) -> list:
     table = [[0 for r in range(col + 1)] for c in range(row  + 1)]
     idList = list(inputDict.keys())
 
-    table[0][0] = ' '
+    table[0][0] = '  '
     for id in range(1, row + 1):
         table[id][0] = idList[id - 1]
     for item in range(1, col + 1):
         table[0][item] = itemList[item - 1]
     
-
     for indexId in range(len(idList)):
         itemsAtId = inputDict[idList[indexId]]
         for indexItem in range(len(itemList)):
             if itemList[indexItem] in itemsAtId:
                table[indexId + 1][indexItem + 1] = 1
     return table
+
+        
 ############################################# HÀM XỬ LÝ INPUT.
 
 ############################################# HÀM LẤY TẬP PHỔ BIẾN 1 ITEM.
@@ -93,6 +94,7 @@ def get_one_item_set(table: list, minsup: float) -> list:
 # k_itemset : itemset có k phần tử.
 # Ở mỗi k_itemset, duyệt các k_itemset phía sau.
 # k_itemset đầu tiên kết hợp với 1 item trong k_itemset phía sau tạo thành (k+1)_itemset mới.
+# thật ra Apriori ở đây. =))
 def get_item_set_k_1(table: list, itemSetK: list, minsup: float) -> list:
     if len(itemSetK) == 0:
         return 'Het roi!'
@@ -172,9 +174,6 @@ def apriori(table: list, minsup: float) -> list:
     return allMaxItemSetName#,allMaxItemSet
 
 # TÌM CÁC LUẬT KẾT HỢP.
-#def association_rule(table: list, maxItemSet: list, minconf: float) -> list:
-    
-
 ############################################# HÀM MAIN.
 def main():
     start = datetime.now()
@@ -187,20 +186,18 @@ def main():
     table = create_binary_table(inputDict)
     #print(*table, sep = '\n')
     
-    #maxItemSet = apriori(table, minsup)
-    #print(maxItemSet)
+    maxItemSet = apriori(table, minsup)
+    print(maxItemSet)
     
     link_folder_train = 'D:\\Workspace\\DataMining\\Code\\'
     
-    inpDict = read_input_file(link_folder_train, 'input.txt')
-    #print(inpDict)
+    #inpDict = read_input_file(link_folder_train, 'input.txt')
     #(itemList, _) = get_item_list_and_count_total(inpDict)
     #print(itemList,_)
     #print(len(itemList))
-    table1 = create_binary_table(inpDict)
-    maxItemSet = apriori(table1, 0.03) # 43367 / 169 = 256; 256 / 9835 = 0.03
-    print(*maxItemSet, sep = '\n')
-    
+    #table1 = create_binary_table(inpDict)
+    #maxItemSet = apriori(table1, 0.03) # 43367 / 169 = 256; 256 / 9835 = 0.03
+    #print(*maxItemSet, sep = '\n')
 
     print (datetime.now()-start)
     
