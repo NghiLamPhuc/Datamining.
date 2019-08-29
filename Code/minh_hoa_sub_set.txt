@@ -1,0 +1,18 @@
+List = {i1, i2, i6, i7}
+each item has two choices. Choose or not. So number of subsets equal 2*2*2*...*2
+0000	{}
+0001	{i1}
+0010	{i2}
+0011	{i1, i2}
+0100	{i6}
+0101	{i6, i1}
+0110	{i6, i2}
+0111	{i6, i2, i1}
+1000	{i7}
+1001	{i7, i1}
+1010	{i7, i2}
+1100	{i7, i6}
+1101	{i7, i6, i1}
+1110	{i7, i6, i2}
+1111	{i7, i6, i2, i1}
+	
