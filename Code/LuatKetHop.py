@@ -1,8 +1,65 @@
 from collections import defaultdict
+def read_input_file(link , fileName) -> dict:
+    f = open(link + fileName, 'r')
+    inpDict = defaultdict(dict)
+    i = 0
+    for line in f:
+        line = line.rstrip()
+        line = sorted(line.split(','))
+        inpDict[i] = line
+        i += 1
+    return inpDict
 
-maxItemSet = [['i4', 'i5'], ['i6', 'i8'], ['i1', 'i7', 'i8'], ['i1', 'i2', 'i6', 'i7']]
-table = [[' ', 'i1', 'i2', 'i3', 'i4', 'i5', 'i6', 'i7', 'i8'], ['O1', 1, 0, 0, 0, 0, 0, 1, 1], ['O2', 1, 1, 0, 0, 0, 1, 1, 1], ['O3', 1, 1, 0, 0, 0, 1, 1, 0], ['O4', 1, 0, 0, 0, 0, 0, 1, 1], ['O5', 0, 0, 1, 1, 1, 1, 0, 1], ['O6', 1, 0, 0, 1, 1, 0, 0, 0]]
+def get_unique_item_dict(inputDict: dict) -> dict:
+    uniqueItem = dict()
+    for (_, items) in inputDict.items():
+        for item in items:
+            if item not in uniqueItem:
+                uniqueItem[item] = 1
+            else:
+                uniqueItem[item] += 1
+    return uniqueItem
+
+def get_item_list_and_count_total(inputDict: dict) -> (list, int):
+    uniqueItem = get_unique_item_dict(inputDict)
+    itemList = list()
+    total = 0
+    for (item, frequency) in uniqueItem.items():
+        itemList.append(item)
+        total += frequency
+    return (sorted(itemList), total)
+
+def create_binary_table(inputDict: dict) -> list:
+    (itemList, _) = get_item_list_and_count_total(inputDict)
+    col = len(itemList)
+    row = len(inputDict)
+    table = [[0 for r in range(col + 1)] for c in range(row  + 1)]
+    idList = list(inputDict.keys())
+
+    table[0][0] = '  '
+    for id in range(1, row + 1):
+        table[id][0] = idList[id - 1]
+    for item in range(1, col + 1):
+        table[0][item] = itemList[item - 1]
+    
+    for indexId in range(len(idList)):
+        itemsAtId = inputDict[idList[indexId]]
+        for indexItem in range(len(itemList)):
+            if itemList[indexItem] in itemsAtId:
+               table[indexId + 1][indexItem + 1] = 1
+    return table
+
+#maxItemSet = [['i4', 'i5'], ['i6', 'i8'], ['i1', 'i7', 'i8'], ['i1', 'i2', 'i6', 'i7']]
+#table = [[' ', 'i1', 'i2', 'i3', 'i4', 'i5', 'i6', 'i7', 'i8'], ['O1', 1, 0, 0, 0, 0, 0, 1, 1], ['O2', 1, 1, 0, 0, 0, 1, 1, 1], ['O3', 1, 1, 0, 0, 0, 1, 1, 0], ['O4', 1, 0, 0, 0, 0, 0, 1, 1], ['O5', 0, 0, 1, 1, 1, 1, 0, 1], ['O6', 1, 0, 0, 1, 1, 0, 0, 0]]
 min_conf = 1.0
+
+maxItemSet = [['bottled water', 'whole milk'], ['citrus fruit', 'whole milk'], ['domestic eggs', 'whole milk'], ['other vegetables', 'rolls/buns'], ['other vegetables', 'root vegetables'], ['other vegetables', 'soda'], ['other vegetables', 'tropical fruit'], ['other vegetables', 'whole milk'], ['other vegetables', 'yogurt'], ['pastry', 'whole milk'], ['pip fruit', 'whole milk'], ['rolls/buns', 'sausage'], ['rolls/buns', 'soda'], ['rolls/buns', 'whole milk'], ['rolls/buns', 'yogurt'], ['root vegetables', 'whole milk'], ['soda', 'whole milk'], ['tropical fruit', 'whole milk'], ['whipped/sour cream', 'whole milk'], ['whole milk', 'yogurt']]
+
+link_folder_train = 'D:\\Workspace\\DataMining\\Code\\'
+
+inpDict = read_input_file(link_folder_train, 'input.txt')
+table = create_binary_table(inpDict)
+
 
 def display_defaultdict(rules: defaultdict(list)):
     for (left, rightList) in rules.items():
@@ -61,6 +118,6 @@ for indexSet in range(len(maxItemSet)):
     listRule = get_associate_rule(table, subList, min_conf)
     if len(listRule) > 0:
         ans.append(listRule)
-
-for a in ans:
-    print(a)
+#print(get_associate_rule(table, get_sub_list(maxItemSet[19]), 1.0))
+#for a in ans:
+#    print(a)
