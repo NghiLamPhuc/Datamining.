@@ -2,9 +2,10 @@
 from datetime import datetime
 from collections import defaultdict
 
-#import pandas as pd
+import pandas as pd
+from pandas import DataFrame
 import os
-############################################# IMPORT
+
 ############################################# INPUT
 def read_input_file(link , fileName) -> dict:
     f = open(link + fileName, 'r')
@@ -18,9 +19,6 @@ def read_input_file(link , fileName) -> dict:
     return inpDict
 ############################################# INPUT
 ############################################# HÀM XỬ LÝ INPUT.
-# 1. INPUT THEO KIỂU BẢNG NHỊ PHÂN. (EXCEL).
-# 1
-#def get_input_from_file() -> List[List]:
 # 2. INPUT THEO KIỂU DICT: (ID, TRANSACTIONS). -> CHUYỂN VỀ BẢNG NHỊ PHÂN.
 # 2.1 Hàm lấy list tần suất theo thứ tự item.
 def get_unique_item_dict(inputDict: dict) -> dict:
@@ -66,9 +64,6 @@ def create_binary_table(inputDict: dict) -> list:
                table[indexId + 1][indexItem + 1] = 1
     return table
 
-        
-############################################# HÀM XỬ LÝ INPUT.
-
 ############################################# HÀM LẤY TẬP PHỔ BIẾN 1 ITEM.
 # Hàm lọc item có tần suất >= minsup.
 # itemset là tập phủ phổ biến. (sau khi so minsup).
@@ -88,7 +83,6 @@ def get_one_item_set(table: list, minsup: float) -> list:
             listItem.append(item)
             oneItemSet.append(listItem)
     return oneItemSet
-############################################# HÀM LẤY TẬP PHỔ BIẾN 1 PHẦN TỬ.
 
 ############################################# HÀM LẤY TẬP PHỔ BIẾN >= 2 PHẦN TỬ.
 # k_itemset : itemset có k phần tử.
@@ -171,33 +165,54 @@ def apriori(table: list, minsup: float) -> list:
         for item in allMaxItemSet[indexSet]:
             nameSet.append(table[0][item])
         allMaxItemSetName.append(nameSet)
+    
     return allMaxItemSetName#,allMaxItemSet
 
-# TÌM CÁC LUẬT KẾT HỢP.
+# Xuất table ra file excel.
+def table_to_xlsx(table: list, name, link):
+    createFolder(link)
+    df = DataFrame(table)
+    df.to_excel(excel_writer = link + name + '.xlsx', index = False)
+
+# Ghi list ra text.
+def list_to_txt(List: list, link, name):
+    createFolder(link)
+    file = link + name
+    with open(file, 'w') as fout:
+        i = 0
+        for itemSet in List:
+            fout.write('%d %s\n' % (i, itemSet) )
+            i += 1
+
+def createFolder(directory):
+    try:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+            return directory
+    except OSError:
+        print ('Error: Creating directory. ' +  directory)
+    
 ############################################# HÀM MAIN.
 def main():
     start = datetime.now()
 
-    minsup = 0.3
-    #inputDict = {100: ['A', 'C', 'D', 'I'], 200: ['A', 'C', 'I'], 300: ['C', 'E', 'I'], 400: ['A', 'B', 'D', 'E'], 500: ['B', 'D', 'I'], 600: ['A', 'B', 'D', 'E']}
-    inputDict = {'O1': ['i1', 'i7', 'i8'], 'O2': ['i1', 'i2', 'i6', 'i7', 'i8'], 'O3': ['i1', 'i2', 'i6', 'i7'], 'O4': ['i1', 'i8', 'i7'], 'O5': ['i3', 'i4', 'i5', 'i6', 'i8'], 'O6': ['i1', 'i4', 'i5']}
-    #inputDict = {'t1': [1, 3, 4], 't2': [2, 3, 5], 't3': [1,2,3,5], 't4':[2,5],'t5':[1,2,3,5]}
-
-    table = create_binary_table(inputDict)
-    #print(*table, sep = '\n')
-    
-    maxItemSet = apriori(table, minsup)
-    print(maxItemSet)
-    
     link_folder_train = 'D:\\Workspace\\DataMining\\Code\\'
     
-    #inpDict = read_input_file(link_folder_train, 'input.txt')
-    #(itemList, _) = get_item_list_and_count_total(inpDict)
-    #print(itemList,_)
-    #print(len(itemList))
-    #table1 = create_binary_table(inpDict)
-    #maxItemSet = apriori(table1, 0.03) # 43367 / 169 = 256; 256 / 9835 = 0.03
-    #print(*maxItemSet, sep = '\n')
+    minsup = 0.3
+    inputDict = {'O1': ['i1', 'i7', 'i8'], 'O2': ['i1', 'i2', 'i6', 'i7', 'i8'], 'O3': ['i1', 'i2', 'i6', 'i7'], 'O4': ['i1', 'i8', 'i7'], 'O5': ['i3', 'i4', 'i5', 'i6', 'i8'], 'O6': ['i1', 'i4', 'i5']}
+    
+    inpDict = read_input_file(link_folder_train, 'input.txt')
+    table1 = create_binary_table(inputDict)
+    table2 = create_binary_table(inpDict)
+    
+    #table_to_xlsx(table1, 'table1', link_folder_train + 'Table\\')
+    #table_to_xlsx(table2, 'table2', link_folder_train + 'Table\\')
+
+    maxItemSet1 = apriori(table1, minsup)
+    #maxItemSet2 = apriori(table2, 0.03) # 43367 / 169 = 256; 256 / 9835 = 0.03
+    
+    list_to_txt(maxItemSet1, link_folder_train + 'Max_ItemSet\\', 'Max_ItemSet1.txt')
+    #list_to_txt(maxItemSet, link_folder_train, 'Max_ItemSet2.txt')
 
     print (datetime.now()-start)
     
