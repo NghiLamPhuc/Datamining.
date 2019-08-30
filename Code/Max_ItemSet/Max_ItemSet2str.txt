@@ -1,0 +1,20 @@
+bottled water, whole milk
+citrus fruit, whole milk
+domestic eggs, whole milk
+other vegetables, rolls/buns
+other vegetables, root vegetables
+other vegetables, soda
+other vegetables, tropical fruit
+other vegetables, whole milk
+other vegetables, yogurt
+pastry, whole milk
+pip fruit, whole milk
+rolls/buns, sausage
+rolls/buns, soda
+rolls/buns, whole milk
+rolls/buns, yogurt
+root vegetables, whole milk
+soda, whole milk
+tropical fruit, whole milk
+whipped/sour cream, whole milk
+whole milk, yogurt
