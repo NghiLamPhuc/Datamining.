@@ -1,1 +1,0 @@
-inputDict = {1: ['Milk', 'Tea', 'Cake'], 2: ['Eggs', 'Tea', 'Cold Drink'], 3: ['Milk', 'Eggs', 'Tea', 'Cold Drink'], 4: ['Eggs', 'Cold Drink'], 5: ['Juice']}
