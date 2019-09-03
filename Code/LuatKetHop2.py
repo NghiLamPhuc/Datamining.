@@ -1,5 +1,6 @@
 from collections import defaultdict
 from datetime import datetime
+import os
 
 link_input = 'D:\\Workspace\\DataMining\\Code\\Input\\'
 
@@ -18,6 +19,25 @@ def read_input_file(link, fileName) -> dict:
         inpDict[i] = line
         i += 1
     return inpDict
+
+def list_to_txt(List: list, link, name):
+    createFolder(link)
+    if not List:
+        print('Khong co tap thoa man minsup!')
+        return
+    file = link + name
+    with open(file, 'w', encoding = 'utf-8') as fout:
+        for itemSet in List:
+            fout.write('%s\n' % itemSet )
+
+def createFolder(directory):
+    try:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+            return directory
+    except OSError:
+        print ('Khong the tao duoc thu muc!' +  directory)
+
 
 # Hàm lấy danh sách tập con của tập cho trước.
 def get_sub_list(List: list) -> list:
@@ -77,16 +97,17 @@ def get_all_strong_rule(inputDict: dict, frequentItemSet: list, min_conf: float)
 
 def main():
     start = datetime.now()
-
-    min_conf = 0.5
-    frequentItemSet = [['i1', 'i7'],['i6', 'i8'],['i1', 'i2', 'i6'],['i1', 'i7', 'i8']]
+    link_folder = 'D:\\Workspace\\DataMining\\Code\\'
+    min_conf = 1.0
+    #frequentItemSet = [['i1', 'i7'],['i6', 'i8'],['i1', 'i2', 'i6'],['i1', 'i7', 'i8']]
     #frequentItemSet = [['B', 'H'], ['A', 'H', 'M', 'N']]
-    name = ['baitapbuoi2.txt', 'baitapthem7.txt']
-    inputDict = read_input_file(link_input, name[0])
-    
+    frequentItemSet = [['i2', 'i3', 'i5'], ['i2', 'i3', 'i8']]
+    name = ['baitapbuoi2.txt', 'baitapthem7.txt', 'baitapbuoi22.txt']
+    inputDict = read_input_file(link_input, name[-1])
     
     ruleList = get_all_strong_rule(inputDict, frequentItemSet, min_conf)
-    print(*ruleList, sep = '\n')
+    list_to_txt(ruleList, link_folder + 'Strong_Rule\\', 'Rule_' + name[-1])
+    #print(*ruleList, sep = '\n')
 
     print (datetime.now()-start)
     
