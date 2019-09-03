@@ -143,7 +143,7 @@ def check_itemSet_minsup(inputDict: dict, itemSet: list, minsup: float) -> bool:
 # Sau đó bỏ các tập bị tập khác phủ.
 def apriori(inputDict: dict, minsup: float) -> list:
     allItemSet = list()
-    allMaxItemSet = list()
+    allFrequentItemSet = list()
     preCover = get_one_itemSet(inputDict, minsup)
     while len(preCover) >= 1:
         nextCover = get_k_1_itemSet(inputDict, preCover, minsup)
@@ -165,27 +165,27 @@ def apriori(inputDict: dict, minsup: float) -> list:
                 check = True
                 break
         if not check:
-            allMaxItemSet.append(currSet)
+            allFrequentItemSet.append(currSet)
            
-    allMaxItemSet.append(allItemSet[-1])
+    allFrequentItemSet.append(allItemSet[-1])
     
-    return allMaxItemSet
+    return allFrequentItemSet
 
 ############################################# HÀM MAIN.
 def main():
     start = datetime.now()
 
-    link_folder_train = 'D:\\Workspace\\DataMining\\Code\\'
-    nameFile = ['baitapbuoi2.txt', 'input.txt', 'input2.txt']
+    link_folder_train = 'D:\\Workspace\\DataMining\\Code\\Input\\'
+    nameFile = ['baitapbuoi2.txt', 'input.txt', 'input2.txt', 'baitapthem7.txt']
 
-    minsup = [0.3, 0.01, 0.3]
+    minsup = [0.3, 0.01, 0.3, 0.6]
     
-    inputDict = read_input_file(link_folder_train, nameFile[0])
+    inputDict = read_input_file(link_folder_train, nameFile[-1])
     
     #(items, min_sup) = get_unique_item_dict(inputDict)
-    maxItemSet = apriori(inputDict, minsup[0])
-    
-    list_to_txt_no_index(maxItemSet, link_folder_train + 'Max_ItemSet\\', 'IS_' + nameFile[0])# + str(minsup[]))
+    maxItemSet = apriori(inputDict, minsup[-1])
+    print(maxItemSet)
+    list_to_txt_no_index(maxItemSet, link_folder_train + 'Frequent_ItemSet\\', 'IS_' + nameFile[-1])# + str(minsup[]))
     
     print (datetime.now()-start)
     

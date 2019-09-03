@@ -1,7 +1,7 @@
 from collections import defaultdict
 from datetime import datetime
 
-link_folder_train = 'D:\\Workspace\\DataMining\\Code\\'
+link_input = 'D:\\Workspace\\DataMining\\Code\\Input\\'
 
 def display_defaultdict(rules: defaultdict(list)):
     for (left, rightList) in rules.items():
@@ -68,12 +68,13 @@ def main():
     start = datetime.now()
 
     min_conf = 1.0
-    maxItemSet = [['i1', 'i7'],['i6', 'i8'],['i1', 'i2', 'i6'],['i1', 'i7', 'i8']]
-    name = ['baitapbuoi2.txt']
-    inputDict = read_input_file(link_folder_train, name[0])
-    #[print(*get_sub_list(maxItemSet[index]), sep = '\n') for index in range(len(maxItemSet))]
+    #frequentItemSet = [['i1', 'i7'],['i6', 'i8'],['i1', 'i2', 'i6'],['i1', 'i7', 'i8']]
+    frequentItemSet = [['B', 'H'], ['A', 'H', 'M', 'N']]
+    name = ['baitapbuoi2.txt', 'baitapthem7.txt']
+    inputDict = read_input_file(link_input, name[-1])
+    #[print(*get_sub_list(frequentItemSet[index]), sep = '\n') for index in range(len(frequentItemSet))]
     
-    print(get_associate_rule(inputDict, get_sub_list(maxItemSet[2]), min_conf))
+    print(get_associate_rule(inputDict, get_sub_list(frequentItemSet[0]), min_conf))
 
     print (datetime.now()-start)
     
