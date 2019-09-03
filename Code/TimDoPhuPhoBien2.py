@@ -13,21 +13,17 @@ def read_input_file(link, fileName) -> dict:
     i = 0
     for line in f:
         line = line.rstrip()
-        #line = sorted(line.split(','))
-        line = sorted(line.split(' '))
+        line = sorted(line.split(', '))
         inpDict[i] = line
         i += 1
     return inpDict
 
-# Xuất table ra file excel.
-def table_to_xlsx(table: list, name, link):
-    createFolder(link)
-    df = DataFrame(table)
-    df.to_excel(link + name + '.xlsx', index = False)
-
 # Ghi list ra text.
 def list_to_txt(List: list, link, name):
     createFolder(link)
+    if not List:
+        print('Khong co tap thoa man minsup!')
+        return
     file = link + name
     with open(file, 'w', encoding = 'utf-8') as fout:
         i = 0
@@ -37,6 +33,9 @@ def list_to_txt(List: list, link, name):
 
 def list_to_txt_no_index(List: list, link, name):
     createFolder(link)
+    if not List:
+        print('Khong co tap thoa man minsup!')
+        return
     file = link + name
     with open(file, 'w', encoding = 'utf-8') as fout:
         for itemSet in List:
@@ -48,7 +47,7 @@ def createFolder(directory):
             os.makedirs(directory)
             return directory
     except OSError:
-        print ('Error: Creating directory. ' +  directory)
+        print ('Khong the tao duoc thu muc! ' +  directory)
 
 ############################################# HÀM XỬ LÝ INPUT.
 # 2. INPUT THEO KIỂU DICT: (ID, TRANSACTIONS). -> CHUYỂN VỀ BẢNG NHỊ PHÂN.
@@ -151,6 +150,11 @@ def apriori(inputDict: dict, minsup: float) -> list:
         for itemSet in nextCover:
             allItemSet.append(itemSet)
         preCover = nextCover
+    
+    if not allItemSet:
+        print('Khong co itemset thoa man min_sup.')
+        return allItemSet
+
     # Remove all itemSet be covered.
     for curr in range(len(allItemSet) - 1):
         currSet = allItemSet[curr]
@@ -172,16 +176,16 @@ def main():
     start = datetime.now()
 
     link_folder_train = 'D:\\Workspace\\DataMining\\Code\\'
-    
-    minsup = 0.3
-    
-    #inputDict = {'O1': ['i1', 'i7', 'i8'], 'O2': ['i1', 'i2', 'i6', 'i7', 'i8'], 'O3': ['i1', 'i2', 'i6', 'i7'], 'O4': ['i1', 'i8', 'i7'], 'O5': ['i3', 'i4', 'i5', 'i6', 'i8'], 'O6': ['i1', 'i4', 'i5']}
-    inputDict = read_input_file(link_folder_train, 'input.txt')
-    (items, min_sup) = get_unique_item_dict(inputDict)
-    maxItemSet = apriori(inputDict, 0.003)
+    nameFile = ['baitapbuoi2.txt', 'input.txt', 'input2.txt']
 
-    list_to_txt(maxItemSet, link_folder_train + 'Max_ItemSet\\', 'Max_ItemSet_input.txt')
-    list_to_txt_no_index(maxItemSet, link_folder_train + 'Max_ItemSet_No_Index\\', 'Max_ItemSet_input.txt')
+    minsup = [0.3, 0.01, 0.3]
+    
+    inputDict = read_input_file(link_folder_train, nameFile[0])
+    
+    #(items, min_sup) = get_unique_item_dict(inputDict)
+    maxItemSet = apriori(inputDict, minsup[0])
+    
+    list_to_txt_no_index(maxItemSet, link_folder_train + 'Max_ItemSet\\', 'IS_' + nameFile[0])# + str(minsup[]))
     
     print (datetime.now()-start)
     
