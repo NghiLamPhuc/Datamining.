@@ -47,7 +47,7 @@ def createFolder(directory):
             os.makedirs(directory)
             return directory
     except OSError:
-        print ('Khong the tao duoc thu muc! ' +  directory)
+        print ('Khong the tao duoc thu muc!' +  directory)
 
 ############################################# HÀM XỬ LÝ INPUT.
 # 2. INPUT THEO KIỂU DICT: (ID, TRANSACTIONS). -> CHUYỂN VỀ BẢNG NHỊ PHÂN.
@@ -175,17 +175,18 @@ def apriori(inputDict: dict, minsup: float) -> list:
 def main():
     start = datetime.now()
 
-    link_folder_train = 'D:\\Workspace\\DataMining\\Code\\Input\\'
+    link_folder = 'D:\\Workspace\\DataMining\\Code\\'
+    link_input = link_folder + 'Input\\'
     nameFile = ['baitapbuoi2.txt', 'input.txt', 'input2.txt', 'baitapthem7.txt']
 
     minsup = [0.3, 0.01, 0.3, 0.6]
     
-    inputDict = read_input_file(link_folder_train, nameFile[-1])
+    inputDict = read_input_file(link_input, nameFile[0])
     
     #(items, min_sup) = get_unique_item_dict(inputDict)
-    maxItemSet = apriori(inputDict, minsup[-1])
+    maxItemSet = apriori(inputDict, minsup[0])
     print(maxItemSet)
-    list_to_txt_no_index(maxItemSet, link_folder_train + 'Frequent_ItemSet\\', 'IS_' + nameFile[-1])# + str(minsup[]))
+    list_to_txt_no_index(maxItemSet, link_folder + 'Frequent_ItemSet\\', 'IS_' + nameFile[0])# + str(minsup[]))
     
     print (datetime.now()-start)
     
