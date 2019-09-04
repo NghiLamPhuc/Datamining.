@@ -18,6 +18,17 @@ def read_input_file(link, fileName) -> dict:
         i += 1
     return inpDict
 
+def read_input_file_2(link, fileName) -> dict:
+    f = open(link + fileName, 'r', encoding = 'utf-8')
+    inpDict = defaultdict(dict)
+    i = 0
+    for line in f:
+        line = line.rstrip()
+        line = sorted(line.split(' '))
+        inpDict[i] = line
+        i += 1
+    return inpDict
+
 # Ghi list ra text.
 def list_to_txt(List: list, link, name):
     createFolder(link)
@@ -182,17 +193,18 @@ def main():
     link_input = link_folder + 'Input\\'
     nameFile = ['baitapbuoi2.txt', 'input.txt', 'input2.txt', 'baitapthem7.txt', 'baitapbuoi22.txt', 'baitapbuoi23.txt', 'test_da2.input']
 
-    minsup = [0.3, 0.001, 0.3, 0.6]
+    minsup = [0.3, 0.03, 0.3, 0.6]
     
     number = -1
 
-    inputDict = read_input_file(link_input, nameFile[number])
+    #inputDict = read_input_file(link_input, nameFile[number])
+    inputDict = read_input_file_2(link_input, nameFile[number])
     
     #(items, _) = get_unique_item_dict(inputDict)
     maxItemSet = apriori(inputDict, minsup[1])
     
     list_to_txt_no_index(maxItemSet, link_folder + 'Frequent_ItemSet\\', 'FIS_' + nameFile[number])
     
-    print (datetime.now()-start)
+    print (datetime.now() - start)
     
 if __name__ == "__main__": main()

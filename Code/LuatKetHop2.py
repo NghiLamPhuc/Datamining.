@@ -18,6 +18,15 @@ def read_input_file(link, fileName) -> dict:
         i += 1
     return inpDict
 
+def read_input_file_2(link, fileName) -> dict:
+    f = open(link + fileName, 'r', encoding = 'utf-8')
+    inpDict = defaultdict(dict)
+    i = 0
+    for line in f:
+        inpDict[i] = sorted(line.rstrip().split(' '))
+        i += 1
+    return inpDict
+
 def read_lines_to_list(link, fileName) -> list:
     f = open(link + fileName, 'r', encoding = 'utf-8')
     List = list()
@@ -72,6 +81,8 @@ def calc_rule_conf(inputDict: dict, left: list, right: list) -> float:
     countLeft = count_occur_itemList(inputDict, left)
     rules = list(set(left) ^ set(right))
     countRule = count_occur_itemList(inputDict, rules)
+    if countLeft == 0:
+        return -1.0
     conf = countRule / countLeft
     
     return conf
@@ -111,14 +122,15 @@ def main():
     start = datetime.now()
     link_folder = 'D:\\Workspace\\DataMining\\Code\\'
     min_conf = 1.0
-    inputName = ['baitapbuoi2.txt', 'baitapbuoi22.txt', 'baitapbuoi23.txt', 'baitapthem7.txt']
-    FISName = ['FIS_baitapbuoi2.txt', 'FIS_baitapbuoi22.txt', 'FIS_baitapbuoi23.txt', 'FIS_baitapthem7.txt']
+    inputName = ['baitapbuoi2.txt', 'baitapbuoi22.txt', 'baitapbuoi23.txt', 'baitapthem7.txt', 'test_da2.input']
+    FISName = ['FIS_baitapbuoi2.txt', 'FIS_baitapbuoi22.txt', 'FIS_baitapbuoi23.txt', 'FIS_baitapthem7.txt', 'FIS_test_da2.input']
     
-    number = 3
+    number = 4
     
     frequentItemSet = read_lines_to_list(link_folder + 'Frequent_ItemSet\\', FISName[number])
     
-    inputDict = read_input_file(link_input, inputName[number])
+    #inputDict = read_input_file(link_input, inputName[number])
+    inputDict = read_input_file_2(link_input, inputName[4])
     
     ruleList = get_all_strong_rule(inputDict, frequentItemSet, min_conf)
     list_to_txt(ruleList, link_folder + 'Strong_Rule\\', 'Rule_' + inputName[number])
