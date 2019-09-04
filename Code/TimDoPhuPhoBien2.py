@@ -180,16 +180,18 @@ def main():
 
     link_folder = 'D:\\Workspace\\DataMining\\Code\\'
     link_input = link_folder + 'Input\\'
-    nameFile = ['baitapbuoi2.txt', 'input.txt', 'input2.txt', 'baitapthem7.txt', 'baitapbuoi22.txt', 'baitapbuoi23.txt']
+    nameFile = ['baitapbuoi2.txt', 'input.txt', 'input2.txt', 'baitapthem7.txt', 'baitapbuoi22.txt', 'baitapbuoi23.txt', 'test_da2.input']
 
-    minsup = [0.3, 0.01, 0.3, 0.6]
+    minsup = [0.3, 0.001, 0.3, 0.6]
     
-    inputDict = read_input_file(link_input, nameFile[-1])
+    number = -1
+
+    inputDict = read_input_file(link_input, nameFile[number])
     
-    #(items, min_sup) = get_unique_item_dict(inputDict)
-    maxItemSet = apriori(inputDict, minsup[0])
-    print(maxItemSet)
-    list_to_txt_no_index(maxItemSet, link_folder + 'Frequent_ItemSet\\', 'IS_' + nameFile[-1])
+    #(items, _) = get_unique_item_dict(inputDict)
+    maxItemSet = apriori(inputDict, minsup[1])
+    
+    list_to_txt_no_index(maxItemSet, link_folder + 'Frequent_ItemSet\\', 'FIS_' + nameFile[number])
     
     print (datetime.now()-start)
     

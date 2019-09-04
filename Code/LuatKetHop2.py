@@ -111,17 +111,17 @@ def main():
     start = datetime.now()
     link_folder = 'D:\\Workspace\\DataMining\\Code\\'
     min_conf = 1.0
-    #frequentItemSet = [['i1', 'i7'],['i6', 'i8'],['i1', 'i2', 'i6'],['i1', 'i7', 'i8']]
-    #frequentItemSet = [['B', 'H'], ['A', 'H', 'M', 'N']]
-    #frequentItemSet = [['i2', 'i3', 'i5'], ['i2', 'i3', 'i8']]
-    #frequentItemSet = [['i3', 'i5', 'i7'], ['i3', 'i4', 'i5', 'i6']]
-    frequentItemSet = read_lines_to_list(link_folder + 'Frequent_ItemSet\\', 'IS_baitapbuoi23.txt')
+    inputName = ['baitapbuoi2.txt', 'baitapbuoi22.txt', 'baitapbuoi23.txt', 'baitapthem7.txt']
+    FISName = ['FIS_baitapbuoi2.txt', 'FIS_baitapbuoi22.txt', 'FIS_baitapbuoi23.txt', 'FIS_baitapthem7.txt']
     
-    name = ['baitapbuoi2.txt', 'baitapthem7.txt', 'baitapbuoi22.txt', 'baitapbuoi23.txt']
-    inputDict = read_input_file(link_input, name[-1])
+    number = 3
+    
+    frequentItemSet = read_lines_to_list(link_folder + 'Frequent_ItemSet\\', FISName[number])
+    
+    inputDict = read_input_file(link_input, inputName[number])
     
     ruleList = get_all_strong_rule(inputDict, frequentItemSet, min_conf)
-    list_to_txt(ruleList, link_folder + 'Strong_Rule\\', '2Rule_' + name[-1])
+    list_to_txt(ruleList, link_folder + 'Strong_Rule\\', 'Rule_' + inputName[number])
     
     print (datetime.now() - start)
     
