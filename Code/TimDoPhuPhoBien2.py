@@ -39,7 +39,10 @@ def list_to_txt_no_index(List: list, link, name):
     file = link + name
     with open(file, 'w', encoding = 'utf-8') as fout:
         for itemSet in List:
-            fout.write('%s\n' % itemSet )
+            for index in range(len(itemSet) - 1):
+                fout.write('%s,' % itemSet[index] )
+            fout.write('%s' % itemSet[-1] )
+            fout.write('\n')
 
 def createFolder(directory):
     try:
@@ -177,7 +180,7 @@ def main():
 
     link_folder = 'D:\\Workspace\\DataMining\\Code\\'
     link_input = link_folder + 'Input\\'
-    nameFile = ['baitapbuoi2.txt', 'input.txt', 'input2.txt', 'baitapthem7.txt', 'baitapbuoi22.txt']
+    nameFile = ['baitapbuoi2.txt', 'input.txt', 'input2.txt', 'baitapthem7.txt', 'baitapbuoi22.txt', 'baitapbuoi23.txt']
 
     minsup = [0.3, 0.01, 0.3, 0.6]
     
