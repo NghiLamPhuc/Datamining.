@@ -14,11 +14,16 @@ def read_input_file(link, fileName) -> dict:
     inpDict = defaultdict(dict)
     i = 0
     for line in f:
-        line = line.rstrip()
-        line = sorted(line.split(', '))
-        inpDict[i] = line
+        inpDict[i] = sorted(line.rstrip().split(', '))
         i += 1
     return inpDict
+
+def read_lines_to_list(link, fileName) -> list:
+    f = open(link + fileName, 'r', encoding = 'utf-8')
+    List = list()
+    [List.append(line.rstrip().split(',')) for line in f]
+    return List
+    
 
 def list_to_txt(List: list, link, name):
     createFolder(link)
@@ -109,15 +114,15 @@ def main():
     #frequentItemSet = [['i1', 'i7'],['i6', 'i8'],['i1', 'i2', 'i6'],['i1', 'i7', 'i8']]
     #frequentItemSet = [['B', 'H'], ['A', 'H', 'M', 'N']]
     #frequentItemSet = [['i2', 'i3', 'i5'], ['i2', 'i3', 'i8']]
-    frequentItemSet = [['i3', 'i5', 'i7'], ['i3', 'i4', 'i5', 'i6']]
-
+    #frequentItemSet = [['i3', 'i5', 'i7'], ['i3', 'i4', 'i5', 'i6']]
+    frequentItemSet = read_lines_to_list(link_folder + 'Frequent_ItemSet\\', 'IS_baitapbuoi23.txt')
+    
     name = ['baitapbuoi2.txt', 'baitapthem7.txt', 'baitapbuoi22.txt', 'baitapbuoi23.txt']
     inputDict = read_input_file(link_input, name[-1])
     
     ruleList = get_all_strong_rule(inputDict, frequentItemSet, min_conf)
     list_to_txt(ruleList, link_folder + 'Strong_Rule\\', '2Rule_' + name[-1])
-    #print(*ruleList, sep = '\n')
-
+    
     print (datetime.now() - start)
     
 if __name__ == "__main__": main()
