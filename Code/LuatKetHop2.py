@@ -9,21 +9,12 @@ def display_defaultdict(rules: defaultdict(list)):
         for right in rightList:
             print('%s -> %s' % (left, right))
 
-def read_input_file(link, fileName) -> dict:
+def read_input_file(link, fileName, splitType) -> dict:
     f = open(link + fileName, 'r', encoding = 'utf-8')
     inpDict = defaultdict(dict)
     i = 0
     for line in f:
-        inpDict[i] = sorted(line.rstrip().split(', '))
-        i += 1
-    return inpDict
-
-def read_input_file_2(link, fileName) -> dict:
-    f = open(link + fileName, 'r', encoding = 'utf-8')
-    inpDict = defaultdict(dict)
-    i = 0
-    for line in f:
-        inpDict[i] = sorted(line.rstrip().split(' '))
+        inpDict[i] = sorted(line.rstrip().split(splitType))
         i += 1
     return inpDict
 
@@ -37,7 +28,7 @@ def read_lines_to_list(link, fileName) -> list:
 def list_to_txt(List: list, link, name):
     createFolder(link)
     if not List:
-        print('Khong co tap thoa man minsup!')
+        print('Khong co tap thoa man minconf!')
         return
     file = link + name
     with open(file, 'w', encoding = 'utf-8') as fout:
@@ -121,18 +112,18 @@ def get_all_strong_rule(inputDict: dict, frequentItemSet: list, min_conf: float)
 def main():
     start = datetime.now()
     link_folder = 'D:\\Workspace\\DataMining\\Code\\'
-    min_conf = 0.7
+    min_conf = 1.0
     inputName = ['baitapbuoi2.txt', 'baitapbuoi22.txt', 'baitapbuoi23.txt', 'baitapthem7.txt', 'test_da2.input']
     FISName = ['FIS_baitapbuoi2.txt', 'FIS_baitapbuoi22.txt', 'FIS_baitapbuoi23.txt', 'FIS_baitapthem7.txt', 'FIS_test_da2.input']
     
-    number = 4
+    number = 0
     
     frequentItemSet = read_lines_to_list(link_folder + 'Frequent_ItemSet\\', FISName[number])
     
-    #inputDict = read_input_file(link_input, inputName[number])
-    inputDict = read_input_file_2(link_input, inputName[4])
+    inputDict = read_input_file(link_input, inputName[number], ', ')
     
     ruleList = get_all_strong_rule(inputDict, frequentItemSet, min_conf)
+    
     list_to_txt(ruleList, link_folder + 'Strong_Rule\\', 'Rule_' + inputName[number])
     
     print (datetime.now() - start)

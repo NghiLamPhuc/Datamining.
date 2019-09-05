@@ -7,14 +7,12 @@ import pandas as pd
 from pandas import DataFrame
 import os
 ############################################# INPUT
-def read_input_file(link, fileName) -> dict:
+def read_input_file(link, fileName) -> dict: # them splitType.
     f = open(link + fileName, 'r', encoding = 'utf-8')
     inpDict = defaultdict(dict)
     i = 0
     for line in f:
-        line = line.rstrip()
-        line = sorted(line.split(', '))
-        inpDict[i] = line
+        inpDict[i] = sorted(line.rstrip().split(', '))
         i += 1
     return inpDict
 
