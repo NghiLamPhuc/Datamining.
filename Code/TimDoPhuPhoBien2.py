@@ -195,13 +195,13 @@ def main():
 
     minsup = [0.3, 0.03, 0.3, 0.6]
     
-    number = -1
+    number = 1
 
-    #inputDict = read_input_file(link_input, nameFile[number])
-    inputDict = read_input_file_2(link_input, nameFile[number])
+    inputDict = read_input_file(link_input, nameFile[number])
+    #inputDict = read_input_file_2(link_input, nameFile[number])
     
     #(items, _) = get_unique_item_dict(inputDict)
-    maxItemSet = apriori(inputDict, minsup[1])
+    maxItemSet = apriori(inputDict, minsup[0])
     
     list_to_txt_no_index(maxItemSet, link_folder + 'Frequent_ItemSet\\', 'FIS_' + nameFile[number])
     

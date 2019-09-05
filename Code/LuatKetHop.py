@@ -49,16 +49,19 @@ def create_binary_table(inputDict: dict) -> list:
                table[indexId + 1][indexItem + 1] = 1
     return table
 
-#maxItemSet = [['i4', 'i5'], ['i6', 'i8'], ['i1', 'i7', 'i8'], ['i1', 'i2', 'i6', 'i7']]
-#table = [[' ', 'i1', 'i2', 'i3', 'i4', 'i5', 'i6', 'i7', 'i8'], ['O1', 1, 0, 0, 0, 0, 0, 1, 1], ['O2', 1, 1, 0, 0, 0, 1, 1, 1], ['O3', 1, 1, 0, 0, 0, 1, 1, 0], ['O4', 1, 0, 0, 0, 0, 0, 1, 1], ['O5', 0, 0, 1, 1, 1, 1, 0, 1], ['O6', 1, 0, 0, 1, 1, 0, 0, 0]]
+maxItemSet = [['i4', 'i5'], ['i6', 'i8'], ['i1', 'i7', 'i8'], ['i1', 'i2', 'i6', 'i7']]
+table = [[' ', 'i1', 'i2', 'i3', 'i4', 'i5', 'i6', 'i7', 'i8'], ['O1', 1, 0, 0, 0, 0, 0, 1, 1], ['O2', 1, 1, 0, 0, 0, 1, 1, 1], ['O3', 1, 1, 0, 0, 0, 1, 1, 0], ['O4', 1, 0, 0, 0, 0, 0, 1, 1], ['O5', 0, 0, 1, 1, 1, 1, 0, 1], ['O6', 1, 0, 0, 1, 1, 0, 0, 0]]
 min_conf = 1.0
 
-maxItemSet = [['bottled water', 'whole milk'], ['citrus fruit', 'whole milk'], ['domestic eggs', 'whole milk'], ['other vegetables', 'rolls/buns'], ['other vegetables', 'root vegetables'], ['other vegetables', 'soda'], ['other vegetables', 'tropical fruit'], ['other vegetables', 'whole milk'], ['other vegetables', 'yogurt'], ['pastry', 'whole milk'], ['pip fruit', 'whole milk'], ['rolls/buns', 'sausage'], ['rolls/buns', 'soda'], ['rolls/buns', 'whole milk'], ['rolls/buns', 'yogurt'], ['root vegetables', 'whole milk'], ['soda', 'whole milk'], ['tropical fruit', 'whole milk'], ['whipped/sour cream', 'whole milk'], ['whole milk', 'yogurt']]
+#maxItemSet = [['bottled water', 'whole milk'], ['citrus fruit', 'whole milk'], ['domestic eggs', 'whole milk'], ['other vegetables', 'rolls/buns'], ['other vegetables', 'root vegetables'], ['other vegetables', 'soda'], ['other vegetables', 'tropical fruit'], ['other vegetables', 'whole milk'], ['other vegetables', 'yogurt'], ['pastry', 'whole milk'], ['pip fruit', 'whole milk'], ['rolls/buns', 'sausage'], ['rolls/buns', 'soda'], ['rolls/buns', 'whole milk'], ['rolls/buns', 'yogurt'], ['root vegetables', 'whole milk'], ['soda', 'whole milk'], ['tropical fruit', 'whole milk'], ['whipped/sour cream', 'whole milk'], ['whole milk', 'yogurt']]
+
+##maxItemSet = [ [225, 39], [225, 48], [237, 39], [237, 48], [310, 39], [310, 48], [110, 38, 39], [170, 38, 39], [32, 38, 39], [32, 38, 48], [36, 38, 39], [39, 48, 65], [39, 48, 89], [32, 39, 41, 48], [38, 39, 41, 48] ]
+
 
 link_folder_train = 'D:\\Workspace\\DataMining\\Code\\'
 
-inpDict = read_input_file(link_folder_train, 'input.txt')
-table = create_binary_table(inpDict)
+#inpDict = read_input_file(link_folder_train, 'GroceryStoreDataSet.txt')
+#table = create_binary_table(inpDict)
 
 
 def display_defaultdict(rules: defaultdict(list)):
@@ -118,6 +121,6 @@ for indexSet in range(len(maxItemSet)):
     listRule = get_associate_rule(table, subList, min_conf)
     if len(listRule) > 0:
         ans.append(listRule)
-#print(get_associate_rule(table, get_sub_list(maxItemSet[19]), 1.0))
-#for a in ans:
-#    print(a)
+
+for a in ans:
+    print(a)

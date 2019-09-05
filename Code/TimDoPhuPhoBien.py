@@ -223,7 +223,7 @@ def main():
     #inpDict = read_input_file(link_folder_train, 'input2.txt')
     #inpDict = read_input_file(link_folder_train, 'test_da2.input')
     (table, min_sup) = create_binary_table(inputDict)
-    print(apriori(table, min_sup))
+    #print(apriori(table, min_sup))
     #B2
     #table_to_xlsx(table, 'table', link_folder_train + 'Table\\')
     #table_to_xlsx(table, 'table_input', link_folder_train + 'Table\\')
@@ -231,17 +231,17 @@ def main():
     ##table_to_xlsx(table, 'table_input2', link_folder_train + 'Table\\')
     #table_to_xlsx(table, 'table_test_da2', link_folder_train + 'Table\\')
     #B3
-    #maxItemSet1 = apriori(table, minsup)
-    #maxItemSet2 = apriori(table, 0.03) # 43367 / 169 = 256; 256 / 9835 = 0.03
+    #axItemSet1 = apriori(table, minsup)
+    maxItemSet2 = apriori(table, min_sup) # 43367 / 169 = 256; 256 / 9835 = 0.03
     #maxItemSet3 = apriori(table, min_sup)
     ##maxItemSet4 = apriori(table, min_sup)
     #maxItemSet5 = apriori(table, min_sup)
     #print(min_sup)
     
-    #list_to_txt(maxItemSet1, link_folder_train + 'Max_ItemSet\\', 'Max_ItemSet1.txt')
-    #list_to_txt_no_index(maxItemSet1, link_folder_train + 'String_Max_ItemSet\\', 'Max_ItemSet1str.txt')
+    #list_to_txt(maxItemSet1, link_folder_train + 'Max_ItemSet_By_Table\\', 'ItemSet.txt')
+    #list_to_txt_no_index(maxItemSet1, link_folder_train + 'String_Max_ItemSet\\', 'ItemSet1str.txt')
 
-    #list_to_txt(maxItemSet2, link_folder_train + 'Max_ItemSet\\', 'Max_ItemSetinput.txt')
+    list_to_txt(maxItemSet2, link_folder_train + 'Max_ItemSet_By_Table\\', 'Max_ItemSet_input.txt')
     #list_to_txt_no_index(maxItemSet2, link_folder_train + 'String_Max_ItemSet\\', 'Max_ItemSetinputstr.txt')
 
     #list_to_txt(maxItemSet3, link_folder_train + 'Max_ItemSet\\', 'Max_ItemSetGro.txt')

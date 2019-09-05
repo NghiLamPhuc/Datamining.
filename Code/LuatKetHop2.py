@@ -121,7 +121,7 @@ def get_all_strong_rule(inputDict: dict, frequentItemSet: list, min_conf: float)
 def main():
     start = datetime.now()
     link_folder = 'D:\\Workspace\\DataMining\\Code\\'
-    min_conf = 1.0
+    min_conf = 0.7
     inputName = ['baitapbuoi2.txt', 'baitapbuoi22.txt', 'baitapbuoi23.txt', 'baitapthem7.txt', 'test_da2.input']
     FISName = ['FIS_baitapbuoi2.txt', 'FIS_baitapbuoi22.txt', 'FIS_baitapbuoi23.txt', 'FIS_baitapthem7.txt', 'FIS_test_da2.input']
     
