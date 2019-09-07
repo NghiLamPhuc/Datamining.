@@ -1,0 +1,4 @@
+King’s-Crab, Sunset-Milk, Dairyland-Cheese, Best-Bread
+Best-Cheese, Dairyland-Milk, Goldenfarm-Apple, Tasty-Pie, Wonder-Bread
+Westcoast-Apple, Dairyland-Milk, Wonder-Bread, Tasty-Pie
+Wonder-Bread, Sunset-Milk, Dairyland-Cheese
