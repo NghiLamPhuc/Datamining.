@@ -6,16 +6,15 @@ import write_file
 from datetime import datetime
 import os
 
-def get_FIS(inputDir, nameFile: list, minsup: float, splitType, indexFile: int):
-    inputDict = read_file.read_input_file(inputDir, nameFile[indexFile], splitType)
+def get_FIS(inputDict: dict, nameFile: list, minsup: float, splitType, indexFile: int) -> dict:
     maxItemSet = Frequent_Itemset.apriori(inputDict, minsup)
     write_file.list_to_txt_with_last_comma(maxItemSet, './FrequentItemSet/', 'FIS_' + nameFile[indexFile])
+    
 
-def get_SR(FISDir, FISName: list, min_conf: float, splitType, indexFile: int):
-    frequentItemSet = read_file.read_lines_to_list(FISDir, FISName[indexFile], splitType)
-    inputDict = read_file.read_input_file(FISDir, FISName[indexFile], splitType)
+def get_SR(inputDict: dict, FISDir, FISName, min_conf: float, splitType):
+    frequentItemSet = read_file.read_lines_to_list(FISDir, FISName, splitType)
     ruleList = Strong_rules.get_all_strong_rule(inputDict, frequentItemSet, min_conf)
-    write_file.list_to_txt(ruleList, './Strong_rule/', 'Rule_' + FISName[indexFile])
+    write_file.list_to_txt(ruleList, './Strong_rule/', 'Rule_' + FISName)
 
 def main():
     start = datetime.now()
@@ -23,22 +22,28 @@ def main():
 
     inputDir = './input/'
     nameFile = sorted(os.listdir(inputDir))
-
+    
     splitType = [' ', ', ', ',']
 
-    minsup = [0.3]
-    minconf = 1.0
+    minsup = 0.05
+    minconf = 0.3
 
-    indexInput = 0
-    indexFIS = 0
+    indexInput = 6 # luu y khi index = 6, minsup = 0.05, minconf = 0.3
+    
     print(nameFile[indexInput])
 
+    # Dau tien, doc input.
+    inputDict = read_file.read_input_file(inputDir, nameFile[indexInput], splitType[-1])
     # Chay buoc 1.
-    get_FIS(inputDir, nameFile, minsup[0], splitType[1], indexInput)
+    get_FIS(inputDict, nameFile, minsup, splitType[1], indexInput)
     # Chay buoc 2.
     FISDir = './FrequentItemSet/'
-    FISName = sorted(os.listdir(FISDir))
-    get_SR(FISDir, FISName, minconf, splitType[1], indexFIS)
+    FISNames = sorted(os.listdir(FISDir))
+    FISName = 'FIS_' + nameFile[indexInput]
+    if FISName not in FISNames:
+        print('Chưa có tập phổ biến.')
+    else:
+        get_SR(inputDict, FISDir, FISName, minconf, splitType[1])
 
     
     

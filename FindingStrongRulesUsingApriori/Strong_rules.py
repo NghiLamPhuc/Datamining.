@@ -23,15 +23,12 @@ def count_occur_itemList(inputDict: dict, itemList: list) -> int:
 # Luật = left -> right.
 # Đếm tần suất các item trong left, right xuất hiện cùng nhau.
 # Chia cho tần suất các item trong left xuất hiện cùng nhau.
-def calc_rule_conf(inputDict: dict, left: list, right: list) -> float:
-    countLeft = count_occur_itemList(inputDict, left)
-    rule = left + right
+def calc_rule_conf(inputDict: dict, cLeft: int, rule: list) -> (float, int):
     countRule = count_occur_itemList(inputDict, rule)
-    if countLeft == 0:
-        return -1.0
-    conf = round(countRule / countLeft, 1)
-    
-    return (conf, countLeft)
+    if countRule == 0:
+        return (-1.0, -1)
+    conf = round(countRule / cLeft, 1)
+    return (conf, countRule)
 
 # Hàm lấy các luật kết hợp TỪ MỘT TẬP (muốn lấy hết thì for) thỏa mãn min_conf.
 # subList -> tat ca cac luat da sinh ra tu frequentItemSet
@@ -39,14 +36,25 @@ def calc_rule_conf(inputDict: dict, left: list, right: list) -> float:
 # Neu 2 sub giao nhau = ro^~ng. Tinh conf.
 def get_strong_rule(inputDict: dict, subList: list, min_conf: float) -> list:
     strongRules = defaultdict(dict)
+    counted = dict()
     for eachSub in subList:
-        for nextSub in subList:
-            if not (set(eachSub) & set(nextSub)):
-                (conf, supp) = calc_rule_conf(inputDict, eachSub, nextSub)
-                if conf >= min_conf:
-                    left = ', '.join(eachSub)
-                    right = ', '.join(nextSub)
-                    strongRules[left][right] = (supp, conf)
+        cLeft = count_occur_itemList(inputDict, eachSub)
+        if cLeft > 0:
+            for nextSub in subList:
+                if not (set(eachSub) & set(nextSub)):
+                    rule = sorted(eachSub + nextSub)
+                    strRule = str(rule)
+                    if strRule in counted:
+                        cRule = counted[strRule]
+                        conf = cRule / cLeft
+                    else:
+                        (conf, cRule) = calc_rule_conf(inputDict, cLeft, rule )
+                        if strRule not in counted and cRule > 0:
+                            counted[strRule] = cRule
+                    if conf >= min_conf:
+                        left = ', '.join(eachSub)
+                        right = ', '.join(nextSub)
+                        strongRules[left][right] = (conf, cLeft, cRule )
                     
     return strongRules
 # Ham lay danh sach cac tap con co the sinh ra luat.
@@ -68,6 +76,6 @@ def get_all_strong_rule(inputDict: dict, frequentItemSet: list(list()), min_conf
     rules = get_strong_rule(inputDict, subRules, min_conf)
     
     for (left, rights) in rules.items():
-        for (right, conf) in rights.items():
-            ruleList.append('[' + left + ']' + '->' + '[' + right + ']' + ': ' + str(conf) )
+        for (right, someVal) in rights.items():
+            ruleList.append('[ %s ] -> [ %s ]: %s' % (left, right, someVal) )
     return ruleList
