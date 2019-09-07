@@ -1,0 +1,5 @@
+B, E, F, G, H
+D, F, K, M
+A, C, D, F, H, M, N
+A, B, H, K, M, N
+A, B, E, G, H, M, N
