@@ -25,15 +25,17 @@ def main():
     
     splitType = [' ', ', ', ',']
 
-    minsup = 0.05
-    minconf = 0.3
+    minsup = 0.09
+    minconf = 0.8
 
-    indexInput = 6 # luu y khi index = 6, minsup = 0.05, minconf = 0.3
+    
+    indexInput = nameFile.index('plants.txt') # luu y khi index = 6, minsup = 0.05, minconf = 0.3
     
     print(nameFile[indexInput])
 
     # Dau tien, doc input.
-    inputDict = read_file.read_input_file(inputDir, nameFile[indexInput], splitType[-1])
+    #inputDict = read_file.read_input_file(inputDir, nameFile[indexInput], splitType[1])
+    inputDict = read_file.read_input_file_plant_input(inputDir, nameFile[indexInput], splitType[-1])
     # Chay buoc 1.
     get_FIS(inputDict, nameFile, minsup, splitType[1], indexInput)
     # Chay buoc 2.
@@ -41,9 +43,9 @@ def main():
     FISNames = sorted(os.listdir(FISDir))
     FISName = 'FIS_' + nameFile[indexInput]
     if FISName not in FISNames:
-        print('Chưa có tập phổ biến.')
+       print('Chưa có tập phổ biến.')
     else:
-        get_SR(inputDict, FISDir, FISName, minconf, splitType[1])
+       get_SR(inputDict, FISDir, FISName, minconf, splitType[1])
 
     
     
