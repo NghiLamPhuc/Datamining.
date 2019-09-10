@@ -11,17 +11,12 @@ def get_unique_item_dict(inputDict: dict) -> dict:
                 uniqueItem[item] = 1
             else:
                 uniqueItem[item] += 1
-    # có n item khác nhau, xuất hiện tổng là m.
-    # 1 item, xuất hiện m/n.
-    # min_sup = (m/n) / số id
-    min_sup = round( ( total/len(uniqueItem) ) / len(inputDict), 5 )
-    
-    return (uniqueItem, min_sup)
+    return uniqueItem
 
 # HÀM LẤY TẬP PHỔ BIẾN 1 ITEM.
 def get_one_itemSet(inputDict: dict, minsup: float) -> list:
     numOfId = len(inputDict)
-    (uniqueItem, min_sup) = get_unique_item_dict(inputDict)
+    uniqueItem = get_unique_item_dict(inputDict)
     itemList = sorted(list(uniqueItem.keys()))
     oneItemSet = list(list())
     minOccur = round(minsup * numOfId) # minsup = frequency(item) / total Id.
@@ -33,7 +28,6 @@ def get_one_itemSet(inputDict: dict, minsup: float) -> list:
             if count == minOccur:
                 oneItemSet.append([item])
                 break
-        
     return oneItemSet
 
 # HÀM LẤY TẬP PHỔ BIẾN >= 2 PHẦN TỬ.
@@ -44,7 +38,7 @@ def get_one_itemSet(inputDict: dict, minsup: float) -> list:
 def get_k_1_itemSet(inputDict: dict, kItemSet: list(list()), minsup: float) -> list:
     if len(kItemSet) == 0:
         return 'Het roi!'
-    
+
     k_1ItemSet = list() # lưu itemset có k+1 phần tử.
     numOfSet = len(kItemSet) # số itemset có k phần tử.
     numOfItem = len(kItemSet[0]) # số phần tử trong một itemset.
@@ -56,17 +50,43 @@ def get_k_1_itemSet(inputDict: dict, kItemSet: list(list()), minsup: float) -> l
                 if addItem not in kItemSet[curr]: # kiểm tra addItem có trùng với item nào trong itemset hay không.
                     possibleSet = kItemSet[curr].copy()
                     possibleSet.append(addItem)
+                    
                     if not check_infrequent_subset(kItemSet, possibleSet):
                         # Can buoc nay hay khong???
-                        checkPossibleAdded = 0
-                        for newSet in k_1ItemSet:
-                            if set(possibleSet) == set(newSet): # kiểm tra possibleSet đã tồn tại chưa.
-                                checkPossibleAdded = 1
-                                break
-                        if (checkPossibleAdded == 0) and check_itemSet_minsup(inputDict, possibleSet, minsup): # đếm tần suất của bộ mới tạo, có thỏa minsup thì lấy.
+                        # checkPossibleAdded = 0
+                        # for newSet in k_1ItemSet:
+                        #     if set(possibleSet) == set(newSet): # kiểm tra possibleSet đã tồn tại chưa.
+                        #         checkPossibleAdded = 1
+                        #         break
+                        # if (checkPossibleAdded == 0) and check_itemSet_minsup(inputDict, possibleSet, minsup): # đếm tần suất của bộ mới tạo, có thỏa minsup thì lấy.
+                        if check_itemSet_minsup(inputDict, possibleSet, minsup):
                             k_1ItemSet.append(possibleSet)
-
     return k_1ItemSet
+
+def get_possible_k_1_itemSet(inputDict: dict, kItemSet: list(list()), minsup: float) -> list:
+    if len(kItemSet) == 0:
+        return 'Het roi!'
+
+    posk_1ItemSet = list() # lưu itemset có k+1 phần tử.
+    numOfSet = len(kItemSet) # số itemset có k phần tử.
+    numOfItem = len(kItemSet[0]) # số phần tử trong một itemset.
+
+    for curr in range(numOfSet - 1):
+        for next in range(curr + 1, numOfSet):
+            for item in range(numOfItem):
+                addItem = kItemSet[next][item] # item trong k_itemset phía sau.
+                if addItem not in kItemSet[curr]: # kiểm tra addItem có trùng với item nào trong itemset hay không.
+                    possibleSet = kItemSet[curr].copy()
+                    possibleSet.append(addItem)
+                    # checkPossibleAdded = 0
+                    # for newSet in posk_1ItemSet:
+                    #     if set(possibleSet) == set(newSet): # kiểm tra possibleSet đã tồn tại chưa.
+                    #         checkPossibleAdded = 1
+                    #         break
+                    # if (checkPossibleAdded == 0) and check_itemSet_minsup(inputDict, possibleSet, minsup): # đếm tần suất của bộ mới tạo, có thỏa minsup thì lấy.
+                    if check_itemSet_minsup(inputDict, possibleSet, minsup):
+                        posk_1ItemSet.append(possibleSet)
+    return posk_1ItemSet
 
 # Ham kiem tra theo Apriori property
 def check_infrequent_subset(kItemSet: list(list()), possibleSet: list) -> bool:
@@ -75,7 +95,6 @@ def check_infrequent_subset(kItemSet: list(list()), possibleSet: list) -> bool:
         iSub = possibleSet[:i] + possibleSet[i+1:]
         if iSub not in kItemSet:
             return True
-        
     return False
 
 # Hàm đếm tần suất của một tập thỏa minsup hay không.
@@ -129,7 +148,6 @@ def apriori(inputDict: dict, minsup: float) -> list:
             allFrequentItemSet.append(currSet)
            
     allFrequentItemSet.append(allItemSet[-1])
-    
     return allFrequentItemSet
 
     
