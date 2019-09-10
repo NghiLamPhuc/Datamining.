@@ -6,10 +6,24 @@ import write_file
 from datetime import datetime
 import os
 
-def get_FIS(inputDict: dict, nameFile: list, minsup: float, splitType, indexFile: int) -> dict:
+def get_FIS(inputDict: dict, minsup: float, splitType, nameFile) -> dict:
     maxItemSet = Frequent_Itemset.apriori(inputDict, minsup)
-    write_file.list_to_txt_with_last_comma(maxItemSet, './FrequentItemSet/', 'FIS_' + nameFile[indexFile])
-    
+    # print('Tập phổ biến tối đại: ')
+    # print(maxItemSet)
+    write_file.list_to_txt_with_last_comma(maxItemSet, './FrequentItemSet/', 'FIS_' + nameFile)
+    return maxItemSet    
+
+def get_possile_itemset(inputDict: dict, minsup: float, nameFile) -> list:
+    allPosIS = list()
+    print('Tất cả tập phổ biến.')
+    preItemSet = Frequent_Itemset.get_one_itemSet(inputDict, minsup)
+    [allPosIS.append(itemSet) for itemSet in preItemSet]
+    while len(preItemSet) >= 1:
+        nextItemSet = Frequent_Itemset.get_k_1_itemSet(inputDict, preItemSet, minsup)
+        [allPosIS.append(itemSet) for itemSet in nextItemSet]
+        preItemSet = nextItemSet
+    write_file.list_to_txt_with_last_comma(allPosIS, './Possible Itemset/', 'Pos_' + nameFile)
+    return allPosIS
 
 def get_SR(inputDict: dict, FISDir, FISName, min_conf: float, splitType):
     frequentItemSet = read_file.read_lines_to_list(FISDir, FISName, splitType)
@@ -21,34 +35,33 @@ def main():
     ## Cac thiet lap dau tien.
 
     inputDir = './input/'
-    nameFile = sorted(os.listdir(inputDir))
+    nameFileList = sorted(os.listdir(inputDir))
     
     splitType = [' ', ', ', ',']
 
-    minsup = 0.09
-    minconf = 0.8
+    minsup = 0.3
+    minconf = 1.0
 
-    
-    indexInput = nameFile.index('plants.txt') # luu y khi index = 6, minsup = 0.05, minconf = 0.3
-    
-    print(nameFile[indexInput])
+    #indexInput = nameFile.index('baitapbuoi3.txt') # luu y khi index = 6, minsup = 0.05, minconf = 0.3
+    indexInput = 1
+    nameFile = nameFileList[indexInput]
+    print(nameFile)
 
     # Dau tien, doc input.
-    #inputDict = read_file.read_input_file(inputDir, nameFile[indexInput], splitType[1])
-    inputDict = read_file.read_input_file_plant_input(inputDir, nameFile[indexInput], splitType[-1])
+    inputDict = read_file.read_input_file(inputDir, nameFile, splitType[1])
+    # inputDict = read_file.read_input_file_plant_input(inputDir, nameFile[indexInput], splitType[-1])
+    
     # Chay buoc 1.
-    get_FIS(inputDict, nameFile, minsup, splitType[1], indexInput)
+    get_FIS(inputDict, minsup, splitType[1], nameFile)
     # Chay buoc 2.
     FISDir = './FrequentItemSet/'
     FISNames = sorted(os.listdir(FISDir))
-    FISName = 'FIS_' + nameFile[indexInput]
+    FISName = 'FIS_' + nameFile
     if FISName not in FISNames:
        print('Chưa có tập phổ biến.')
     else:
        get_SR(inputDict, FISDir, FISName, minconf, splitType[1])
 
-    
-    
     print(datetime.now() - start)
 
 if __name__ == "__main__": main()
