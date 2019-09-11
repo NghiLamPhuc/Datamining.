@@ -8,12 +8,12 @@ import os
 
 def get_FIS(inputDict: dict, minsup: float, nameFile) -> dict:
     maxItemSet = Frequent_Itemset.apriori(inputDict, minsup)
-    write_file.list_to_txt_with_last_comma(maxItemSet, './FrequentItemSet/', 'FIS_' + nameFile)
+    write_file.list_to_txt_with_last_comma(maxItemSet, './Frequent Itemset/', 'FIS_' + nameFile) if maxItemSet else print('Danh sách rỗng: FIS_' + nameFile)
     return maxItemSet    
 
 def get_possile_itemset(inputDict: dict, minsup: float, nameFile) -> list:
     allPosItemSet = Frequent_Itemset.get_all_possible_itemset(inputDict, minsup)
-    write_file.list_to_txt_with_last_comma(allPosItemSet, './Possible Itemset/', 'Pos_' + nameFile)
+    write_file.list_to_txt_with_last_comma(allPosItemSet, './Possible Itemset/', 'Pos_' + nameFile) if allPosItemSet else print('Danh sách rỗng: Pos_' + nameFile)
     return allPosItemSet
 
 def get_SR(inputDict: dict, FISDir, FISName, min_conf: float, splitType):
@@ -33,8 +33,8 @@ def main():
     minsup = 0.3
     minconf = 1.0
 
-    #indexInput = nameFile.index('baitapbuoi3.txt') # luu y khi index = 6, minsup = 0.05, minconf = 0.3
-    indexInput = 4
+    #indexInput = nameFile.index('plants.txt') # luu y khi , minsup = 0.05, minconf = 0.3
+    indexInput = 6
     nameFile = nameFileList[indexInput]
     print(nameFile)
 
@@ -46,13 +46,13 @@ def main():
     get_FIS(inputDict, minsup, nameFile)
     get_possile_itemset(inputDict, minsup, nameFile)
     # Chay buoc 2.
-    # FISDir = './FrequentItemSet/'
-    # FISNames = sorted(os.listdir(FISDir))
-    # FISName = 'FIS_' + nameFile
-    # if FISName not in FISNames:
-    #    print('Chưa có tập phổ biến.')
-    # else:
-    #    get_SR(inputDict, FISDir, FISName, minconf, splitType[1])
+    FISDir = './Frequent Itemset/'
+    FISNames = sorted(os.listdir(FISDir))
+    FISName = 'FIS_' + nameFile
+    if FISName not in FISNames:
+       print('Chưa có tập phổ biến.')
+    else:
+       get_SR(inputDict, FISDir, FISName, minconf, splitType[1])
 
     print(datetime.now() - start)
 

@@ -103,7 +103,7 @@ def check_itemSet_minsup(inputDict: dict, itemSet: list, minsup: float) -> bool:
         return False
     
     numOfId = len(inputDict)
-    numOfItemInSet = len(itemSet)
+    # numOfItemInSet = len(itemSet)
     minOccur = round(minsup * numOfId)
     count = 0
     # duyệt theo dòng, mỗi dòng, duyệt theo item trong itemSet
@@ -138,13 +138,13 @@ def get_all_possible_itemset(inputDict: dict, minsup):
 def apriori(inputDict: dict, minsup: float) -> list:
     allItemSet = list()
     allFrequentItemSet = list()
-    preCover = get_one_itemSet(inputDict, minsup)
-    # can bo sung, them tap 1 itemset.
-    while len(preCover) >= 1:
-        nextCover = get_k_1_itemSet(inputDict, preCover, minsup)
-        for itemSet in nextCover:
+    preItemSet = get_one_itemSet(inputDict, minsup)
+    allItemSet = preItemSet.copy()
+    while len(preItemSet) >= 1:
+        nextItemSet = get_k_1_itemSet(inputDict, preItemSet, minsup)
+        for itemSet in nextItemSet:
             allItemSet.append(itemSet)
-        preCover = nextCover
+        preItemSet = nextItemSet
     
     if not allItemSet:
         print('Khong co itemset thoa man min_sup.')
