@@ -6,24 +6,15 @@ import write_file
 from datetime import datetime
 import os
 
-def get_FIS(inputDict: dict, minsup: float, splitType, nameFile) -> dict:
+def get_FIS(inputDict: dict, minsup: float, nameFile) -> dict:
     maxItemSet = Frequent_Itemset.apriori(inputDict, minsup)
-    # print('Tập phổ biến tối đại: ')
-    # print(maxItemSet)
     write_file.list_to_txt_with_last_comma(maxItemSet, './FrequentItemSet/', 'FIS_' + nameFile)
     return maxItemSet    
 
 def get_possile_itemset(inputDict: dict, minsup: float, nameFile) -> list:
-    allPosIS = list()
-    print('Tất cả tập phổ biến.')
-    preItemSet = Frequent_Itemset.get_one_itemSet(inputDict, minsup)
-    [allPosIS.append(itemSet) for itemSet in preItemSet]
-    while len(preItemSet) >= 1:
-        nextItemSet = Frequent_Itemset.get_k_1_itemSet(inputDict, preItemSet, minsup)
-        [allPosIS.append(itemSet) for itemSet in nextItemSet]
-        preItemSet = nextItemSet
-    write_file.list_to_txt_with_last_comma(allPosIS, './Possible Itemset/', 'Pos_' + nameFile)
-    return allPosIS
+    allPosItemSet = Frequent_Itemset.get_all_possible_itemset(inputDict, minsup)
+    write_file.list_to_txt_with_last_comma(allPosItemSet, './Possible Itemset/', 'Pos_' + nameFile)
+    return allPosItemSet
 
 def get_SR(inputDict: dict, FISDir, FISName, min_conf: float, splitType):
     frequentItemSet = read_file.read_lines_to_list(FISDir, FISName, splitType)
@@ -43,7 +34,7 @@ def main():
     minconf = 1.0
 
     #indexInput = nameFile.index('baitapbuoi3.txt') # luu y khi index = 6, minsup = 0.05, minconf = 0.3
-    indexInput = 1
+    indexInput = 4
     nameFile = nameFileList[indexInput]
     print(nameFile)
 
@@ -52,15 +43,16 @@ def main():
     # inputDict = read_file.read_input_file_plant_input(inputDir, nameFile[indexInput], splitType[-1])
     
     # Chay buoc 1.
-    get_FIS(inputDict, minsup, splitType[1], nameFile)
+    get_FIS(inputDict, minsup, nameFile)
+    get_possile_itemset(inputDict, minsup, nameFile)
     # Chay buoc 2.
-    FISDir = './FrequentItemSet/'
-    FISNames = sorted(os.listdir(FISDir))
-    FISName = 'FIS_' + nameFile
-    if FISName not in FISNames:
-       print('Chưa có tập phổ biến.')
-    else:
-       get_SR(inputDict, FISDir, FISName, minconf, splitType[1])
+    # FISDir = './FrequentItemSet/'
+    # FISNames = sorted(os.listdir(FISDir))
+    # FISName = 'FIS_' + nameFile
+    # if FISName not in FISNames:
+    #    print('Chưa có tập phổ biến.')
+    # else:
+    #    get_SR(inputDict, FISDir, FISName, minconf, splitType[1])
 
     print(datetime.now() - start)
 
