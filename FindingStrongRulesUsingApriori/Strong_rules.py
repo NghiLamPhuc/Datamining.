@@ -27,7 +27,8 @@ def calc_rule_conf(inputDict: dict, cLeft: int, rule: list) -> (float, int):
     countRule = count_occur_itemList(inputDict, rule)
     if countRule == 0:
         return (-1.0, -1)
-    conf = round(countRule / cLeft, 1)
+    # conf = round(countRule / cLeft, 1)
+    conf = countRule / cLeft
     return (conf, countRule)
 
 # Hàm lấy các luật kết hợp TỪ MỘT TẬP (muốn lấy hết thì for) thỏa mãn min_conf.

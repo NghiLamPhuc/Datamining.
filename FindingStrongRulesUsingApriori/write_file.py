@@ -4,7 +4,7 @@ import make_folder
 def list_to_txt_with_last_comma(List: list, folderName, name):
     make_folder.create_folder(folderName)
     if not List:
-        print('Danh sach rong!')
+        print('Danh sach rong! ' + name)
         return
     
     with open(folderName + name, 'w', encoding = 'utf-8') as fout:
@@ -17,7 +17,7 @@ def list_to_txt_with_last_comma(List: list, folderName, name):
 def list_to_txt(List: list, folderName, name):
     make_folder.create_folder(folderName)
     if not List:
-        print('Danh sach rong!')
+        print('Danh sach rong! ' + name)
         return
   
     with open(folderName + name, 'w', encoding = 'utf-8') as fout:
