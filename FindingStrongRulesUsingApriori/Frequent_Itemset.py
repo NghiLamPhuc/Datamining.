@@ -13,7 +13,9 @@ def get_unique_item_dict(inputDict: dict) -> dict:
     return uniqueItem
 
 # HÀM LẤY TẬP PHỔ BIẾN 1 ITEM.
-def get_one_itemSet(inputDict: dict, minsup: float) -> list:
+# Đếm theo item_list, duyệt từng dòng inputDict, nếu item xuất hiện >= số lần cần thiết, lấy.
+# oneItemSet là list lớn, chứa các list nhỏ, mỗi list nhỏ là 1_itemset.
+def get_one_itemSet(inputDict: dict, minsup: float) -> list(list()):
     numOfId = len(inputDict)
     uniqueItem = get_unique_item_dict(inputDict)
     itemList = sorted(list(uniqueItem.keys()))
@@ -21,7 +23,7 @@ def get_one_itemSet(inputDict: dict, minsup: float) -> list:
     minOccur = round(minsup * numOfId) # minsup = frequency(item) / total Id.
     for item in itemList:
         count = 0
-        for (id, items) in inputDict.items():
+        for (_, items) in inputDict.items():
             if item in items:
                 count += 1
             if count == minOccur:
@@ -30,63 +32,49 @@ def get_one_itemSet(inputDict: dict, minsup: float) -> list:
     return oneItemSet
 
 # HÀM LẤY TẬP PHỔ BIẾN >= 2 PHẦN TỬ.
-# k_itemset : itemset có k phần tử.
-# Ở mỗi k_itemset, duyệt các k_itemset phía sau.
-# k_itemset đầu tiên kết hợp với 1 item trong k_itemset phía sau tạo thành (k+1)_itemset mới.
-# thật ra Apriori ở đây. =))
+# Tìm các tập k+1 phần tử từ các tập k phần tử.
+# k_itemset : itemset có k phần tử. k_1 = k+1
+# Duyệt qua list k_itemset, tại mỗi k_itemset, ghép đôi một với các k_itemset phía sau.
+# Lấy 1 item trong k_itemset phía sau, ghép với k_itemset đang duyệt. -> gọi tập mới này là possibleSet (hay candidate).
+# Kiểm tra possibleSet này đã từng lấy chưa? Kiểm tra các tập con possibleSet có bị infrequent không? Kiểm tra min support.
 def get_k_1_itemSet(inputDict: dict, kItemSet: list(list()), minsup: float) -> list:
     if len(kItemSet) == 0:
-        return 'Het roi!'
+        return 'kItemset input rỗng!'
 
-    k_1ItemSet = list() # lưu itemset có k+1 phần tử.
-    numOfSet = len(kItemSet) # số itemset có k phần tử.
-    numOfItem = len(kItemSet[0]) # số phần tử trong một itemset.
+    # lưu itemset có k+1 phần tử.
+    k_1ItemSet = list()
+    # số itemset có k phần tử.
+    numOfSet = len(kItemSet)
+    # số phần tử trong một itemset.
+    numOfItem = len(kItemSet[0])
 
     for curr in range(numOfSet - 1):
         for next in range(curr + 1, numOfSet):
             for item in range(numOfItem):
-                addItem = kItemSet[next][item] # item trong k_itemset phía sau.
-                if addItem not in kItemSet[curr]: # kiểm tra addItem có trùng với item nào trong itemset hay không.
+                # item trong k_itemset phía sau.
+                addItem = kItemSet[next][item]
+                # kiểm tra addItem có trùng với item nào trong itemset hay không.
+                if addItem not in kItemSet[curr]:
                     # itemset ứng viên. (candidate)
                     possibleSet = kItemSet[curr].copy()
                     possibleSet.append(addItem)
-                    
-                    if not check_infrequent_subset(kItemSet, possibleSet):
-                        checkPossibleAdded = 0
-                        for newSet in k_1ItemSet:
-                            if set(possibleSet) == set(newSet): # kiểm tra possibleSet đã tồn tại chưa.
-                                checkPossibleAdded = 1
-                                break
-                        if (checkPossibleAdded == 0) and check_itemSet_minsup(inputDict, possibleSet, minsup): # đếm tần suất của bộ mới tạo, có thỏa minsup thì lấy.
-                            k_1ItemSet.append(possibleSet)
+                    # kiểm tra possibleSet đã tồn tại trong k_1ItemSet chưa.
+                    if not check_in_list(k_1ItemSet, possibleSet):
+                        if not check_infrequent_subset(kItemSet, possibleSet):
+                            # đếm tần suất của bộ mới tạo, có thỏa minsup thì lấy.
+                            if check_itemset_minsup(inputDict, possibleSet, minsup):
+                                k_1ItemSet.append(possibleSet)
     return k_1ItemSet
 
-def get_possible_k_1_itemSet(inputDict: dict, kItemSet: list(list()), minsup: float) -> list:
-    if len(kItemSet) == 0:
-        return 'Het roi!'
+# Hàm kiểm tra itemset đã từng thêm vào list chưa.
+def check_in_list(List: list, candidate: list) -> bool:
+    for iList in List:
+        if set(iList) == set(candidate):
+            return True
+    return False
 
-    posk_1ItemSet = list() # lưu itemset có k+1 phần tử.
-    numOfSet = len(kItemSet) # số itemset có k phần tử.
-    numOfItem = len(kItemSet[0]) # số phần tử trong một itemset.
-
-    for curr in range(numOfSet - 1):
-        for next in range(curr + 1, numOfSet):
-            for item in range(numOfItem):
-                addItem = kItemSet[next][item] # item trong k_itemset phía sau.
-                if addItem not in kItemSet[curr]: # kiểm tra addItem có trùng với item nào trong itemset hay không.
-                    possibleSet = kItemSet[curr].copy()
-                    possibleSet.append(addItem)
-                    checkPossibleAdded = 0
-                    for newSet in posk_1ItemSet:
-                        if set(possibleSet) == set(newSet): # kiểm tra possibleSet đã tồn tại chưa.
-                            checkPossibleAdded = 1
-                            break
-                    if (checkPossibleAdded == 0) and check_itemSet_minsup(inputDict, possibleSet, minsup): # đếm tần suất của bộ mới tạo, có thỏa minsup thì lấy.
-                    # if check_itemSet_minsup(inputDict, possibleSet, minsup):
-                        posk_1ItemSet.append(possibleSet)
-    return posk_1ItemSet
-
-# Ham kiem tra theo Apriori property
+# Ham kiem tra theo Apriori property.
+# "All non-empty subsets of a frequent itemset must also be frequent"
 def check_infrequent_subset(kItemSet: list(list()), possibleSet: list) -> bool:
     k_1 = len(possibleSet)
     for i in range(k_1):
@@ -96,38 +84,31 @@ def check_infrequent_subset(kItemSet: list(list()), possibleSet: list) -> bool:
     return False
 
 # Hàm đếm tần suất của một tập thỏa minsup hay không.
-# Duyệt từng dòng (là từng transaction), nếu itemset có trong dòng thì sumId++
-# 
-def check_itemSet_minsup(inputDict: dict, itemSet: list, minsup: float) -> bool:
-    if len(itemSet) == 0:
+# min occurance số lần xuất hiện tối thiểu theo min_support.
+# Duyệt từng dòng (transaction) trong inputDict, nếu itemset có thì count++, đến khi = min occurance.
+def check_itemset_minsup(inputDict: dict, itemset: list, minsup: float) -> bool:
+    if len(itemset) == 0:
         return False
     
     numOfId = len(inputDict)
-    # numOfItemInSet = len(itemSet)
     minOccur = round(minsup * numOfId)
     count = 0
-    # duyệt theo dòng, mỗi dòng, duyệt theo item trong itemSet
-    for (id, items) in inputDict.items():
-    #     sumId = 0
-        # for item in itemSet:
-        #     if item in items:
-        #         sumId += 1
-        # if sumId == numOfItemInSet:
-        #     count += 1
-        if set(itemSet).issubset(items):
+    # duyệt theo dòng, mỗi dòng, duyệt theo item trong itemset
+    for (_, items) in inputDict.items():
+        if set(itemset).issubset(items):
             count += 1     
-        if count >= minOccur:
+        if count == minOccur:
             return True
     return False
 
 # Hàm lấy các tập phổ biến.
-def get_all_possible_itemset(inputDict: dict, minsup):
+
+def get_all_possible_itemset(inputDict: dict, minsup) -> list:
     allPosItemSet = list()
     preItemSet = get_one_itemSet(inputDict, minsup)
-    # [allPosItemSet.append(itemSet) for itemSet in preItemSet]
     allPosItemSet = preItemSet.copy()
     while len(preItemSet) >= 1:
-        nextItemSet = get_possible_k_1_itemSet(inputDict, preItemSet, minsup)
+        nextItemSet = get_k_1_itemSet(inputDict, preItemSet, minsup)
         [allPosItemSet.append(itemSet) for itemSet in nextItemSet] 
         preItemSet = nextItemSet
     return allPosItemSet
@@ -138,8 +119,10 @@ def get_all_possible_itemset(inputDict: dict, minsup):
 def apriori(inputDict: dict, minsup: float) -> list:
     allItemSet = list()
     allFrequentItemSet = list()
+    
     preItemSet = get_one_itemSet(inputDict, minsup)
     allItemSet = preItemSet.copy()
+    
     while len(preItemSet) >= 1:
         nextItemSet = get_k_1_itemSet(inputDict, preItemSet, minsup)
         for itemSet in nextItemSet:
@@ -147,10 +130,10 @@ def apriori(inputDict: dict, minsup: float) -> list:
         preItemSet = nextItemSet
     
     if not allItemSet:
-        print('Khong co itemset thoa man min_sup.')
+        print('Khong co itemset thoa man min_supp.')
         return allItemSet
 
-    # Remove all itemSet be covered.
+    # Loại itemset bị chứa.
     for curr in range(len(allItemSet) - 1):
         currSet = allItemSet[curr]
         for next in range(curr + 1, len(allItemSet)):
@@ -164,5 +147,3 @@ def apriori(inputDict: dict, minsup: float) -> list:
            
     allFrequentItemSet.append(allItemSet[-1])
     return allFrequentItemSet
-
-    
