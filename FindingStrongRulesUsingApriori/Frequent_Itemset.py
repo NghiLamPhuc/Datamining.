@@ -103,7 +103,7 @@ def check_itemset_minsup(inputDict: dict, itemset: list, minsup: float) -> bool:
 
 # Hàm lấy các tập phổ biến.
 
-def get_all_possible_itemset(inputDict: dict, minsup) -> list:
+def get_all_possible_itemset(inputDict: dict, minsup: float) -> list:
     allPosItemSet = list()
     preItemSet = get_one_itemSet(inputDict, minsup)
     allPosItemSet = preItemSet.copy()
