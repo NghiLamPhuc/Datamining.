@@ -32,13 +32,13 @@ def get_SR(inputDict: dict, FISDir, FISName, min_conf: float, splitType):
 def main():
     start = datetime.now()
     ## Cac thiet lap dau tien.
-    # inputDir = './input/'
-    inputDir = './Generate Input/'
+    inputDir = './input/'
+    # inputDir = './Generate Input/'
     nameFileList = sorted(os.listdir(inputDir))
     
     splitType = [' ', ', ', ',']
 
-    minsup = 0.09
+    minsup = 0.3
     minconf = 0.8
 
     #indexInput = nameFileList.index('z.txt') # luu y khi plants.txt, minsup = 0.05, minconf = 0.3
@@ -47,23 +47,24 @@ def main():
     print(nameFile)
 
     ## Dau tien, doc input.
-    inputDict = read_file.read_input_file(inputDir, nameFile, splitType[2])
+    inputDict = read_file.read_input_file(inputDir, nameFile, splitType[1])
     # inputDict = read_file.read_input_file_plant_input(inputDir, nameFile[indexInput], splitType[-1])
     
-    ## Chay buoc 1.
+    # # Chay buoc 1.
     itemset = get_possile_itemset(inputDict, minsup, nameFile)
     freqitemset = get_FIS(inputDict, minsup, splitType[1], nameFile)
     
-    ## Chay buoc 2.
+    # ## Chay buoc 2.
     if freqitemset == 1:
         FISDir = './Frequent_ItemSet/'
         FISNames = sorted(os.listdir(FISDir))
         FISName = 'FIS_' + nameFile
         if FISName in FISNames:
-            get_SR(inputDict, FISDir, FISName, minconf, splitType[2])
+            get_SR(inputDict, FISDir, FISName, minconf, splitType[1])
     else:
         print('Không có luật, do không có tập phổ biến.')
-    
+    # print(Strong_rules.get_subsets([1,2,3,4,5,6,7]))
+    # print(Strong_rules.get_sub_list([1,2,3,4,5,6,7]))
     print(datetime.now() - start)
 
 if __name__ == "__main__": main()
