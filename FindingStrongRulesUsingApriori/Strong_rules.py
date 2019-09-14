@@ -50,7 +50,7 @@ def get_strong_rule(inputDict: dict, subList: list, min_conf: float) -> list:
                         conf = cRule / cLeft
                     else:
                         (conf, cRule) = calc_rule_conf(inputDict, cLeft, rule )
-                        if strRule not in counted and cRule > 0:
+                        if cRule > 0:
                             counted[strRule] = cRule
                     if conf >= min_conf:
                         left = ', '.join(eachSub)
