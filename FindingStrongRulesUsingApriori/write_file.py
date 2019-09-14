@@ -23,3 +23,17 @@ def list_to_txt(List: list, folderName, name):
     with open(folderName + name, 'w', encoding = 'utf-8') as fout:
         for itemSet in List:
             fout.write('%s\n' % itemSet )
+
+def dict_to_txt(Dict: dict, folderName, name):
+    make_folder.create_folder(folderName)
+    if not Dict:
+        print('Dict rỗng!' + name)
+        return
+
+    with open(folderName + name, 'w', encoding = 'utf-8') as fout:
+        for (key, values) in Dict.items():
+            row = ''
+            for indexItem in range(len(values) - 1):
+                fout.write('%s,' % values[indexItem] )
+            fout.write('%s' % values[-1] )
+            fout.write('\n')
