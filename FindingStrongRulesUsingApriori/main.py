@@ -6,26 +6,23 @@ import write_file
 from datetime import datetime
 import os
 
-def get_FIS(inputDict: dict, minsup: float, splitType, nameFile) -> dict:
+def get_FIS(inputDict: dict, minsup: float, splitType, nameFile) -> int:
     maxItemSet = Frequent_Itemset.apriori(inputDict, minsup)
-    # print('Tập phổ biến tối đại: ')
-    # print(maxItemSet)
-    
-    write_file.list_to_txt_with_last_comma(maxItemSet, './FrequentItemSet/', 'FIS_' + nameFile) if maxItemSet else print('Không có tập phổ biến tối đại.')
-    
-    return maxItemSet    
+    if maxItemSet:
+        write_file.list_to_txt_with_last_comma(maxItemSet, './Frequent_ItemSet/', 'FIS_' + nameFile)
+        return 1
+    else:
+        #print('Không có tập phổ biến tối đại.')
+        return 0
 
-def get_possile_itemset(inputDict: dict, minsup: float, nameFile) -> list:
-    allPosIS = list()
-    # print('Tất cả tập phổ biến.')
-    preItemSet = Frequent_Itemset.get_one_itemSet(inputDict, minsup)
-    [allPosIS.append(itemSet) for itemSet in preItemSet]
-    while len(preItemSet) >= 1:
-        nextItemSet = Frequent_Itemset.get_k_1_itemSet(inputDict, preItemSet, minsup)
-        [allPosIS.append(itemSet) for itemSet in nextItemSet]
-        preItemSet = nextItemSet
-    write_file.list_to_txt_with_last_comma(allPosIS, './Possible Itemset/', 'Pos_' + nameFile) if allPosIS else print('Không có tập phổ biến.')
-    return allPosIS
+def get_possile_itemset(inputDict: dict, minsup: float, nameFile) -> int:
+    allPosItemSet = Frequent_Itemset.get_all_possible_itemset(inputDict, minsup)
+    if allPosItemSet:
+        write_file.list_to_txt_with_last_comma(allPosItemSet, './Possible_ItemSet/', 'Pos_' + nameFile)
+        return 1
+    else:
+        #print('Không có tập phổ biến.')
+        return 0
 
 def get_SR(inputDict: dict, FISDir, FISName, min_conf: float, splitType):
     frequentItemSet = read_file.read_lines_to_list(FISDir, FISName, splitType)
@@ -35,35 +32,38 @@ def get_SR(inputDict: dict, FISDir, FISName, min_conf: float, splitType):
 def main():
     start = datetime.now()
     ## Cac thiet lap dau tien.
-    inputDir = './input/'
+    # inputDir = './input/'
+    inputDir = './Generate Input/'
     nameFileList = sorted(os.listdir(inputDir))
     
     splitType = [' ', ', ', ',']
 
-    minsup = 0.05
-    minconf = 0.3
+    minsup = 0.09
+    minconf = 0.8
 
-    indexInput = nameFileList.index('plants.txt') # luu y khi plants.txt, minsup = 0.05, minconf = 0.3
-    #indexInput = 1
+    #indexInput = nameFileList.index('z.txt') # luu y khi plants.txt, minsup = 0.05, minconf = 0.3
+    indexInput = 0
     nameFile = nameFileList[indexInput]
     print(nameFile)
 
-    # Dau tien, doc input.
+    ## Dau tien, doc input.
     inputDict = read_file.read_input_file(inputDir, nameFile, splitType[2])
     # inputDict = read_file.read_input_file_plant_input(inputDir, nameFile[indexInput], splitType[-1])
     
-    # Chay buoc 1.
-    get_FIS(inputDict, minsup, splitType[1], nameFile)
-    get_possile_itemset(inputDict, minsup, nameFile)
-    # Chay buoc 2.
-    FISDir = './FrequentItemSet/'
-    FISNames = sorted(os.listdir(FISDir))
-    FISName = 'FIS_' + nameFile
-    if FISName not in FISNames:
-       print('Chưa có tập phổ biến.')
+    ## Chay buoc 1.
+    itemset = get_possile_itemset(inputDict, minsup, nameFile)
+    freqitemset = get_FIS(inputDict, minsup, splitType[1], nameFile)
+    
+    ## Chay buoc 2.
+    if freqitemset == 1:
+        FISDir = './Frequent_ItemSet/'
+        FISNames = sorted(os.listdir(FISDir))
+        FISName = 'FIS_' + nameFile
+        if FISName in FISNames:
+            get_SR(inputDict, FISDir, FISName, minconf, splitType[2])
     else:
-       get_SR(inputDict, FISDir, FISName, minconf, splitType[1])
-
+        print('Không có luật, do không có tập phổ biến.')
+    
     print(datetime.now() - start)
 
 if __name__ == "__main__": main()
