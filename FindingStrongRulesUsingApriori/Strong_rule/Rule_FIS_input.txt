@@ -1,0 +1,6 @@
+[ other vegetables ] -> [ whole milk ]: (0.4, 1903, 736)
+[ rolls/buns ] -> [ whole milk ]: (0.30790491984521834, 1809, 557)
+[ rolls/buns, whole milk ] -> [ other vegetables ]: (0.31597845601436264, 557, 176)
+[ yogurt ] -> [ other vegetables ]: (0.3112244897959184, 1372, 427)
+[ yogurt ] -> [ whole milk ]: (0.40160349854227406, 1372, 551)
+[ whole milk, yogurt ] -> [ other vegetables ]: (0.397459165154265, 551, 219)
