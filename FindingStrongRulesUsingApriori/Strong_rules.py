@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 # Hàm lấy danh sách tập con của tập cho trước.
-def get_sub_list(List: list) -> list:
+def get_sub_list(List: list) -> list(list()):
     l = len(List)
     allSubList = list() # has 2**len(List) subset. Because each item has two choices, choose or not. 2 * 2 * 2 * ... * 2.
     for i in range(1, 1 << l):
@@ -10,8 +10,31 @@ def get_sub_list(List: list) -> list:
             if ( i & (1 << j) ) > 0:
                 subList.append(List[j])
         allSubList.append(subList)
-    
     return allSubList
+# Hàm lấy danh sách tập con của tập cho trước, bỏ đi tập rỗng và tập input.
+# Kết quả là 1 list chứa các list.
+# Duyệt từng item trong list, đưa item đó vào 1 list.
+# Ghép list trên với các list con trong list kết quả.
+def get_subsets(List: list) -> list():
+    List.sort()
+    # result = list()
+    # result.append(list())
+    # same same :))
+    result = [[]]
+    ##################### Viet Pythonic cho gon lai.
+    # for item in List:
+    #     temp = []
+    #     itemList = []
+    #     itemList.append(item)
+    #     for i in result:
+    #         temp.append(i + itemList)
+    #     result += temp
+    ##################### Viet Pythonic cho gon lai.
+    for item in List:
+        result += [i + [item] for i in result]
+    del result[0]
+    del result[-1]
+    return result
 
 # Hàm đếm tần suất của itemList (các item xuất hiện cùng trong 1 id).
 def count_occur_itemList(inputDict: dict, itemList: list) -> int:
@@ -63,7 +86,8 @@ def get_strong_rule(inputDict: dict, subList: list, min_conf: float) -> list:
 def get_sub_make_rule(frequentItemSet: list(list())) -> list:
     subRule = list()
     for kItemSet in frequentItemSet:
-        allSubList = get_sub_list(kItemSet) # bị trùng lại các tập con. Cần loại trước khi chạy luật.
+        #allSubList = get_sub_list(kItemSet) # bị trùng lại các tập con. Cần loại trước khi chạy luật.
+        allSubList = get_subsets(kItemSet)
         for sL in allSubList:
             if sL not in subRule:
                 subRule.append(sL)
