@@ -102,7 +102,9 @@ def check_itemset_minsup(inputDict: dict, itemset: list, minsup: float) -> bool:
     return False
 
 # Hàm lấy các tập phổ biến.
-
+# Lấy tập phủ phổ biến 1 phần tử.
+# Duyệt đến khi tập phủ phổ biến chỉ còn 1 tập.
+# Mỗi bước lặp, tìm tập phủ phổ biến k+1 phần tử từ tập phổ biến k phần tử.
 def get_all_possible_itemset(inputDict: dict, minsup: float) -> list:
     allPosItemSet = list()
     preItemSet = get_one_itemSet(inputDict, minsup)
