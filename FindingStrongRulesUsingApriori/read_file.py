@@ -1,5 +1,7 @@
 from collections import defaultdict
 
+# Hàm đọc file dạng nhiều dòng, mỗi dòng là transaction.
+# mỗi transaction chứa item.
 def read_input_file(link, fileName, splitType) -> dict:
     f = open(link + fileName, 'r', encoding = 'utf-8')
     inpDict = defaultdict(dict)
@@ -9,15 +11,16 @@ def read_input_file(link, fileName, splitType) -> dict:
         i += 1
     f.close()
     return inpDict
-
-def read_input_file_plant_input(link, fileName, splitType) -> dict:
+# Hàm đọc file dạng nhiều dòng, mỗi dòng là transaction.
+# Cột đầu tiên là tên transaction.
+def read_input_file_with_row_name(link, fileName, splitType) -> dict:
     f = open(link + fileName, 'r', encoding = 'utf-8')
     inpDict = defaultdict(dict)
     for line in f:
         lineToList = line.rstrip().split(splitType)
-        plant = lineToList[0]
-        states = lineToList[1:]
-        inpDict[plant] = sorted(states)
+        rowName = lineToList[0]
+        items = lineToList[1:]
+        inpDict[rowName] = sorted(items)
     f.close()
     return inpDict
 
