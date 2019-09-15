@@ -31,7 +31,13 @@ def get_subsets(List: list) -> list():
 def count_occur_itemList(inputDict: dict, itemList: list) -> int:
     count = 0
     # for id in range(len(inputDict)):
-    for (id,items) in inputDict.items():
+    for (id, items) in inputDict.items():
+        if set(itemList).issubset(items):
+            count += 1
+    return count
+def count_occur_itemList_2(inputDict: dict, itemList: list) -> int:
+    count = 0
+    for id in range(len(inputDict)):
         if set(itemList).issubset(items):
             count += 1
     return count

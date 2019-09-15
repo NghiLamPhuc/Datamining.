@@ -56,16 +56,17 @@ def main():
     minsup = 0.1
     minconf = 0.8
     
-    indexInput = nameFileList.index('plants.txt') # luu y khi plants.txt, minsup = 0.05, minconf = 0.3
-    # indexInput = 0
-    
-    nameFile = nameFileList[indexInput]
-    print(nameFile)
-    
-    # inputDict = read_file.read_input_file(inputDir, nameFile, splitType[1])
-    inputDict = read_file.read_input_file_with_row_name(inputDir, nameFile, splitType[2])
-    run(inputDict, minsup, minconf, nameFile)
-    
-    print(datetime.now() - start)
+    # indexInput = nameFileList.index('plants.txt') # luu y khi plants.txt, minsup = 0.05, minconf = 0.3
+    for indexInput in range(6):
+        # indexInput = 0
+        
+        nameFile = nameFileList[indexInput]
+        print(nameFile)
+        
+        # inputDict = read_file.read_input_file(inputDir, nameFile, splitType[1])
+        inputDict = read_file.read_input_file_with_row_name(inputDir, nameFile, splitType[2])
+        run(inputDict, minsup, minconf, nameFile)
+        
+        print(datetime.now() - start)
 
 if __name__ == "__main__": main()
