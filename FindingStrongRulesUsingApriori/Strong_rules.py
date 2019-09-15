@@ -17,19 +17,10 @@ def get_sub_list(List: list) -> list(list()):
 # Ghép list trên với các list con trong list kết quả.
 def get_subsets(List: list) -> list():
     List.sort()
-    # result = list()
-    # result.append(list())
-    # same same :))
+    # result = list() # result.append(list()) # same same :))
     result = [[]]
     ##################### Viet Pythonic cho gon lai.
-    # for item in List:
-    #     temp = []
-    #     itemList = []
-    #     itemList.append(item)
-    #     for i in result:
-    #         temp.append(i + itemList)
-    #     result += temp
-    ##################### Viet Pythonic cho gon lai.
+    # for item in List:#     temp = []#     itemList = []#     itemList.append(item)#     for i in result:#         temp.append(i + itemList)#     result += temp
     for item in List:
         result += [i + [item] for i in result]
     del result[0]
@@ -39,8 +30,9 @@ def get_subsets(List: list) -> list():
 # Hàm đếm tần suất của itemList (các item xuất hiện cùng trong 1 id).
 def count_occur_itemList(inputDict: dict, itemList: list) -> int:
     count = 0
-    for id in range(len(inputDict)):
-        if set(itemList).issubset(inputDict[id]):
+    # for id in range(len(inputDict)):
+    for (id,items) in inputDict.items():
+        if set(itemList).issubset(items):
             count += 1
     return count
 # Luật = left -> right.
@@ -78,7 +70,7 @@ def get_strong_rule(inputDict: dict, subList: list, min_conf: float) -> list:
                     if conf >= min_conf:
                         left = ', '.join(eachSub)
                         right = ', '.join(nextSub)
-                        strongRules[left][right] = (conf, cLeft, cRule )
+                        strongRules[left][right] = [conf, cLeft, cRule]
                     
     return strongRules
 # Ham lay danh sach cac tap con co the sinh ra luat.
@@ -97,10 +89,8 @@ def get_sub_make_rule(frequentItemSet: list(list())) -> list:
 def get_all_strong_rule(inputDict: dict, frequentItemSet: list(list()), min_conf: float) -> list:
     ruleList = list()
     subRules = get_sub_make_rule(frequentItemSet)
-    
     rules = get_strong_rule(inputDict, subRules, min_conf)
-    
     for (left, rights) in rules.items():
         for (right, someVal) in rights.items():
-            ruleList.append('[ %s ] -> [ %s ]: %s' % (left, right, someVal) )
+            ruleList.append('[ %s ] -> [ %s ]: (conf=%f, left=%d, rule=%d)' % (left, right, someVal[0], someVal[1], someVal[2]) )
     return ruleList
