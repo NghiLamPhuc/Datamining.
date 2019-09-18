@@ -1,0 +1,22 @@
+12 Large Itemsets (by Apriori):
+{i8} (support: 33.33333333333333%)
+{i4} (support: 33.33333333333333%)
+{i2} (support: 66.66666666666666%)
+{i3} (support: 66.66666666666666%)
+{i5} (support: 66.66666666666666%)
+{i8, i2} (support: 33.33333333333333%)
+{i8, i3} (support: 33.33333333333333%)
+{i2, i3} (support: 50%)
+{i2, i5} (support: 50%)
+{i3, i5} (support: 33.33333333333333%)
+{i8, i2, i3} (support: 33.33333333333333%)
+{i2, i3, i5} (support: 33.33333333333333%)
+
+6 Association Rules
+{i8} => {i2} (Support: 33.33%,  Confidence: 100.00%)
+{i8} => {i3} (Support: 33.33%,  Confidence: 100.00%)
+{i8} => {i2, i3} (Support: 33.33%,  Confidence: 100.00%)
+{i8, i2} => {i3} (Support: 33.33%,  Confidence: 100.00%)
+{i8, i3} => {i2} (Support: 33.33%,  Confidence: 100.00%)
+{i3, i5} => {i2} (Support: 33.33%,  Confidence: 100.00%)
+
