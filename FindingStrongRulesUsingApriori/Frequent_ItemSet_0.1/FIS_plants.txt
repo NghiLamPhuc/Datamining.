@@ -1,0 +1,156 @@
+de
+hi
+ia
+ks
+mn
+nh
+pr
+al, ar
+al, ky
+al, md
+al, tx
+ar, ga
+ar, la
+ar, mo
+ar, nc
+ar, ok
+ar, tn
+ar, tx
+az, ca
+az, nm
+az, ut
+ca, id
+ca, nv
+ca, ut
+co, nm
+co, ut
+co, wy
+ct, md
+ct, mi
+ct, oh
+ct, va
+fl, tx
+ga, ky
+ga, tx
+id, mt
+il, ky
+il, ma
+il, mi
+il, mo
+il, nc
+il, on
+il, tn
+il, wi
+in, ky
+in, md
+in, mi
+in, mo
+in, va
+ky, mo
+ky, oh
+ky, pe
+md, sc
+me, ny
+mo, tn
+mo, va
+ms, va
+mt, or
+mt, wa
+mt, wy
+nc, oh
+nc, wv
+nm, tx
+nm, ut
+nv, or
+nv, ut
+ny, vt
+ny, wv
+oh, on
+oh, tn
+oh, wv
+ok, tx
+on, qc
+pe, wi
+sc, tx
+ut, wy
+al, fl, la
+al, fl, ms
+al, ga, tn
+al, la, sc
+al, nc, tn
+al, tn, va
+bc, or, wa
+ca, or, wa
+fl, ga, ms
+fl, ga, nc
+fl, nc, sc
+ga, la, nc
+ga, la, sc
+ga, sc, tn
+id, or, wa
+il, in, ny
+il, in, oh
+il, in, pe
+il, md, pe
+il, md, va
+il, nj, pe
+il, oh, va
+il, pe, va
+in, ny, oh
+in, ny, pe
+in, oh, pe
+ky, md, va
+ky, nc, tn
+ky, nc, va
+ky, tn, va
+la, ms, sc
+la, ms, tx
+la, nc, sc
+ma, md, ny
+ma, md, pe
+ma, mi, ny
+ma, mi, pe
+ma, ny, oh
+ma, ny, on
+ma, ny, va
+ma, oh, pe
+ma, pe, va
+md, nc, nj
+md, oh, pe
+md, oh, va
+md, va, wv
+mi, ny, oh
+mi, ny, on
+mi, ny, pe
+mi, ny, wi
+mi, oh, pe
+mi, on, pe
+mi, on, wi
+nc, nj, va
+nc, ny, pe
+nc, ny, va
+nc, sc, tn
+ny, oh, va
+ny, on, pe
+oh, pe, va
+pe, tn, va
+pe, va, wv
+sc, tn, va
+al, fl, ga, sc
+al, ga, la, ms
+ct, ma, nj, ny
+ct, ma, ny, pe
+ct, nj, ny, pe
+ga, md, nc, va
+ga, nc, tn, va
+il, ny, oh, pe
+ma, nj, ny, pe
+md, nc, pe, va
+md, nc, tn, va
+md, nj, ny, pe
+md, nj, pe, va
+md, ny, pe, va
+nj, ny, oh, pe
+nj, ny, pe, va
+al, ga, ms, nc, sc
+al, ga, nc, sc, va
