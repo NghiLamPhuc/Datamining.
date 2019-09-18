@@ -1,0 +1,52 @@
+A
+B
+D
+E
+F
+G
+H
+K
+M
+N
+A, B
+A, H
+A, M
+A, N
+B, E
+B, G
+B, H
+B, M
+B, N
+D, F
+D, M
+E, G
+E, H
+F, H
+F, M
+G, H
+H, M
+H, N
+K, M
+M, N
+A, B, H
+A, B, M
+A, B, N
+A, H, M
+A, H, N
+A, M, N
+B, E, G
+B, E, H
+B, G, H
+B, H, M
+B, H, N
+B, M, N
+D, F, M
+E, G, H
+H, M, N
+A, B, H, M
+A, B, H, N
+A, B, M, N
+A, H, M, N
+B, E, G, H
+B, H, M, N
+A, B, H, M, N

@@ -1,0 +1,6 @@
+[ i3, i5 ] -> [ i2 ]: (conf=1.000000, left=2, rule=2)
+[ i8 ] -> [ i2 ]: (conf=1.000000, left=2, rule=2)
+[ i8 ] -> [ i3 ]: (conf=1.000000, left=2, rule=2)
+[ i8 ] -> [ i2, i3 ]: (conf=1.000000, left=2, rule=2)
+[ i2, i8 ] -> [ i3 ]: (conf=1.000000, left=2, rule=2)
+[ i3, i8 ] -> [ i2 ]: (conf=1.000000, left=2, rule=2)

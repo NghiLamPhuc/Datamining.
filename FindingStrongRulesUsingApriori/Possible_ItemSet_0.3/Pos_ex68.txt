@@ -1,0 +1,129 @@
+Best-Bread
+Best-Cheese
+Dairyland-Cheese
+Dairyland-Milk
+Goldenfarm-Apple
+King’s-Crab
+Sunset-Milk
+Tasty-Pie
+Westcoast-Apple
+Wonder-Bread
+tran1
+tran2
+tran3
+tran4
+Best-Bread, Dairyland-Cheese
+Best-Bread, King’s-Crab
+Best-Bread, Sunset-Milk
+Best-Bread, tran1
+Best-Cheese, Dairyland-Milk
+Best-Cheese, Goldenfarm-Apple
+Best-Cheese, Tasty-Pie
+Best-Cheese, Wonder-Bread
+Best-Cheese, tran2
+Dairyland-Cheese, King’s-Crab
+Dairyland-Cheese, Sunset-Milk
+Dairyland-Cheese, Wonder-Bread
+Dairyland-Cheese, tran1
+Dairyland-Cheese, tran4
+Dairyland-Milk, Goldenfarm-Apple
+Dairyland-Milk, Tasty-Pie
+Dairyland-Milk, Westcoast-Apple
+Dairyland-Milk, Wonder-Bread
+Dairyland-Milk, tran2
+Dairyland-Milk, tran3
+Goldenfarm-Apple, Tasty-Pie
+Goldenfarm-Apple, Wonder-Bread
+Goldenfarm-Apple, tran2
+King’s-Crab, Sunset-Milk
+King’s-Crab, tran1
+Sunset-Milk, Wonder-Bread
+Sunset-Milk, tran1
+Sunset-Milk, tran4
+Tasty-Pie, Westcoast-Apple
+Tasty-Pie, Wonder-Bread
+Tasty-Pie, tran2
+Tasty-Pie, tran3
+Westcoast-Apple, Wonder-Bread
+Westcoast-Apple, tran3
+Wonder-Bread, tran2
+Wonder-Bread, tran3
+Wonder-Bread, tran4
+Best-Bread, Dairyland-Cheese, King’s-Crab
+Best-Bread, Dairyland-Cheese, Sunset-Milk
+Best-Bread, Dairyland-Cheese, tran1
+Best-Bread, King’s-Crab, Sunset-Milk
+Best-Bread, King’s-Crab, tran1
+Best-Bread, Sunset-Milk, tran1
+Best-Cheese, Dairyland-Milk, Goldenfarm-Apple
+Best-Cheese, Dairyland-Milk, Tasty-Pie
+Best-Cheese, Dairyland-Milk, Wonder-Bread
+Best-Cheese, Dairyland-Milk, tran2
+Best-Cheese, Goldenfarm-Apple, Tasty-Pie
+Best-Cheese, Goldenfarm-Apple, Wonder-Bread
+Best-Cheese, Goldenfarm-Apple, tran2
+Best-Cheese, Tasty-Pie, Wonder-Bread
+Best-Cheese, Tasty-Pie, tran2
+Best-Cheese, Wonder-Bread, tran2
+Dairyland-Cheese, King’s-Crab, Sunset-Milk
+Dairyland-Cheese, King’s-Crab, tran1
+Dairyland-Cheese, Sunset-Milk, Wonder-Bread
+Dairyland-Cheese, Sunset-Milk, tran1
+Dairyland-Cheese, Sunset-Milk, tran4
+Dairyland-Cheese, Wonder-Bread, tran4
+Dairyland-Milk, Goldenfarm-Apple, Tasty-Pie
+Dairyland-Milk, Goldenfarm-Apple, Wonder-Bread
+Dairyland-Milk, Goldenfarm-Apple, tran2
+Dairyland-Milk, Tasty-Pie, Westcoast-Apple
+Dairyland-Milk, Tasty-Pie, Wonder-Bread
+Dairyland-Milk, Tasty-Pie, tran2
+Dairyland-Milk, Tasty-Pie, tran3
+Dairyland-Milk, Westcoast-Apple, Wonder-Bread
+Dairyland-Milk, Westcoast-Apple, tran3
+Dairyland-Milk, Wonder-Bread, tran2
+Dairyland-Milk, Wonder-Bread, tran3
+Goldenfarm-Apple, Tasty-Pie, Wonder-Bread
+Goldenfarm-Apple, Tasty-Pie, tran2
+Goldenfarm-Apple, Wonder-Bread, tran2
+King’s-Crab, Sunset-Milk, tran1
+Sunset-Milk, Wonder-Bread, tran4
+Tasty-Pie, Westcoast-Apple, Wonder-Bread
+Tasty-Pie, Westcoast-Apple, tran3
+Tasty-Pie, Wonder-Bread, tran2
+Tasty-Pie, Wonder-Bread, tran3
+Westcoast-Apple, Wonder-Bread, tran3
+Best-Bread, Dairyland-Cheese, King’s-Crab, Sunset-Milk
+Best-Bread, Dairyland-Cheese, King’s-Crab, tran1
+Best-Bread, Dairyland-Cheese, Sunset-Milk, tran1
+Best-Bread, King’s-Crab, Sunset-Milk, tran1
+Best-Cheese, Dairyland-Milk, Goldenfarm-Apple, Tasty-Pie
+Best-Cheese, Dairyland-Milk, Goldenfarm-Apple, Wonder-Bread
+Best-Cheese, Dairyland-Milk, Goldenfarm-Apple, tran2
+Best-Cheese, Dairyland-Milk, Tasty-Pie, Wonder-Bread
+Best-Cheese, Dairyland-Milk, Tasty-Pie, tran2
+Best-Cheese, Dairyland-Milk, Wonder-Bread, tran2
+Best-Cheese, Goldenfarm-Apple, Tasty-Pie, Wonder-Bread
+Best-Cheese, Goldenfarm-Apple, Tasty-Pie, tran2
+Best-Cheese, Goldenfarm-Apple, Wonder-Bread, tran2
+Best-Cheese, Tasty-Pie, Wonder-Bread, tran2
+Dairyland-Cheese, King’s-Crab, Sunset-Milk, tran1
+Dairyland-Cheese, Sunset-Milk, Wonder-Bread, tran4
+Dairyland-Milk, Goldenfarm-Apple, Tasty-Pie, Wonder-Bread
+Dairyland-Milk, Goldenfarm-Apple, Tasty-Pie, tran2
+Dairyland-Milk, Goldenfarm-Apple, Wonder-Bread, tran2
+Dairyland-Milk, Tasty-Pie, Westcoast-Apple, Wonder-Bread
+Dairyland-Milk, Tasty-Pie, Westcoast-Apple, tran3
+Dairyland-Milk, Tasty-Pie, Wonder-Bread, tran2
+Dairyland-Milk, Tasty-Pie, Wonder-Bread, tran3
+Dairyland-Milk, Westcoast-Apple, Wonder-Bread, tran3
+Goldenfarm-Apple, Tasty-Pie, Wonder-Bread, tran2
+Tasty-Pie, Westcoast-Apple, Wonder-Bread, tran3
+Best-Bread, Dairyland-Cheese, King’s-Crab, Sunset-Milk, tran1
+Best-Cheese, Dairyland-Milk, Goldenfarm-Apple, Tasty-Pie, Wonder-Bread
+Best-Cheese, Dairyland-Milk, Goldenfarm-Apple, Tasty-Pie, tran2
+Best-Cheese, Dairyland-Milk, Goldenfarm-Apple, Wonder-Bread, tran2
+Best-Cheese, Dairyland-Milk, Tasty-Pie, Wonder-Bread, tran2
+Best-Cheese, Goldenfarm-Apple, Tasty-Pie, Wonder-Bread, tran2
+Dairyland-Milk, Goldenfarm-Apple, Tasty-Pie, Wonder-Bread, tran2
+Dairyland-Milk, Tasty-Pie, Westcoast-Apple, Wonder-Bread, tran3
+Best-Cheese, Dairyland-Milk, Goldenfarm-Apple, Tasty-Pie, Wonder-Bread, tran2

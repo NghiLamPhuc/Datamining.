@@ -1,0 +1,9 @@
+get_strong_rule:
+Duyet cac luat sinh ra tu frequentItemSet. (left va right cua 1 rule).
+Ti le conf = count Rule / count Left.
+Count Left truoc, neu Left == 0 thi out luon.
+Nguoc lai, duyet tiep cac luat co kha nang la right. (neu 2 set khong giao nhau).
+Luc nay, rule = left + right
+Neu left + right da count roi, thi lay ra dung.
+Neu left + right chua count thi count.
+
