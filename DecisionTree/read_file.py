@@ -30,3 +30,16 @@ def read_lines_to_list(link, fileName, splitType) -> list:
     [List.append(line.rstrip().split(splitType)) for line in f]
     f.close()
     return List
+
+def read_columns_to_list(link, fileName, splitType) -> list:
+    f = open(link + fileName, 'r', encoding = 'utf-8')
+    List = []
+    cols = 0
+    for line in f:
+        cols = len(line.rstrip().split(', '))
+        break
+    for col in range(cols):
+        List.append([x.rstrip().split(', ')[col] for x in f.readlines()])
+
+    f.close()
+    return List
