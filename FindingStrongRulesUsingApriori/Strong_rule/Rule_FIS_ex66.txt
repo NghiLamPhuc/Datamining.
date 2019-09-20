@@ -1,2 +1,0 @@
-[  I ] -> [  C ]: (conf=1.000000, left=1, rule=1)
-[  U ] -> [  C ]: (conf=1.000000, left=1, rule=1)

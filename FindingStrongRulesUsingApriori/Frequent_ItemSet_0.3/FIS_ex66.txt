@@ -1,4 +1,0 @@
-C, K
-E, K, M
-K, M, Y
-E, K, N, O, Y
