@@ -1,4 +1,7 @@
 from collections import defaultdict
+from graphviz import Digraph
+import os
+os.environ["PATH"] += os.pathsep + 'C:/Users/NghiLam/Anaconda3/Library/bin/graphviz'
 
 # Hàm lấy danh sách tập con của tập cho trước.
 def get_sub_list(List: list) -> list(list()):
@@ -38,7 +41,7 @@ def count_occur_itemList(inputDict: dict, itemList: list) -> int:
 def count_occur_itemList_2(inputDict: dict, itemList: list) -> int:
     count = 0
     for id in range(len(inputDict)):
-        if set(itemList).issubset(items):
+        if set(itemList).issubset(inputDict[id]):
             count += 1
     return count
 # Luật = left -> right.
@@ -96,6 +99,7 @@ def get_all_strong_rule(inputDict: dict, frequentItemSet: list(list()), min_conf
     ruleList = list()
     subRules = get_sub_make_rule(frequentItemSet)
     rules = get_strong_rule(inputDict, subRules, min_conf)
+
     for (left, rights) in rules.items():
         for (right, someVal) in rights.items():
             ruleList.append('[ %s ] -> [ %s ]: (conf=%f, left=%d, rule=%d)' % (left, right, someVal[0], someVal[1], someVal[2]) )
