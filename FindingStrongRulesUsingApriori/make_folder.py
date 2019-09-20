@@ -5,5 +5,6 @@ def create_folder(directory):
         if not os.path.exists(directory):
             os.makedirs(directory)
             return directory
+        # else: print('Folder da ton tai.')
     except OSError:
         print ('Khong the tao duoc thu muc!' +  directory)
