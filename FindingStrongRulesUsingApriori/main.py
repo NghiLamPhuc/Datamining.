@@ -26,7 +26,7 @@ def get_possile_itemset(inputDict: dict, minsup: float, nameFile) -> int:
 
 def get_SR(inputDict: dict, FISDir, FISName, minconf: float, minsupp: float):
     frequentItemSet = read_file.read_lines_to_list(FISDir, FISName, ', ')
-    (ruleList, topTenRules) = Strong_rules.get_all_strong_rule(inputDict, frequentItemSet, minconf)
+    (ruleList, topTenRules) = Strong_rules.get_all_strong_rule_2(inputDict, frequentItemSet, minconf)
     write_file.list_to_txt(ruleList, './RESULT/Strong_rule_minsupp_' + str(minsupp) + ' minconf_' + str(minconf) + '/', 'Rule_' + FISName) if ruleList else print('Không có luật thỏa mãn.')
     write_file.list_to_txt(topTenRules, './RESULT/Topten_Strong_rule_minsupp_' + str(minsupp) + ' minconf_' + str(minconf) + '/', '10_Rules_' + FISName) if topTenRules else print('Không có luật thỏa mãn.')
 
