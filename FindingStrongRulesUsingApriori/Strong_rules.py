@@ -1,7 +1,10 @@
 from collections import defaultdict
-from graphviz import Digraph
-import os
-os.environ["PATH"] += os.pathsep + 'C:/Users/NghiLam/Anaconda3/Library/bin/graphviz'
+from heapq import nlargest
+from operator import itemgetter
+from pprint import pprint
+# from graphviz import Digraph
+# import os
+# os.environ["PATH"] += os.pathsep + 'C:/Users/NghiLam/Anaconda3/Library/bin/graphviz'
 
 # Hàm lấy danh sách tập con của tập cho trước.
 def get_sub_list(List: list) -> list(list()):
@@ -80,14 +83,14 @@ def get_strong_rule(inputDict: dict, subList: list, min_conf: float) -> list:
                         left = ', '.join(eachSub)
                         right = ', '.join(nextSub)
                         strongRules[left][right] = [conf, cLeft, cRule]
-                    
+                        
     return strongRules
 # Ham lay danh sach cac tap con co the sinh ra luat.
 # subRule: tat ca left, right.
 def get_sub_make_rule(frequentItemSet: list(list())) -> list:
     subRule = list()
     for kItemSet in frequentItemSet:
-        #allSubList = get_sub_list(kItemSet) # bị trùng lại các tập con. Cần loại trước khi chạy luật.
+        # bị trùng lại các tập con. Cần loại trước khi chạy luật.
         allSubList = get_subsets(kItemSet)
         for sL in allSubList:
             if sL not in subRule:
@@ -98,9 +101,16 @@ def get_sub_make_rule(frequentItemSet: list(list())) -> list:
 def get_all_strong_rule(inputDict: dict, frequentItemSet: list(list()), min_conf: float) -> list:
     ruleList = list()
     subRules = get_sub_make_rule(frequentItemSet)
-    rules = get_strong_rule(inputDict, subRules, min_conf)
-
-    for (left, rights) in rules.items():
+    rulesDisplay = get_strong_rule(inputDict, subRules, min_conf)
+    topTen = get_top_ten(rulesDisplay)
+    for (left, rights) in rulesDisplay.items():
         for (right, someVal) in rights.items():
             ruleList.append('[ %s ] -> [ %s ]: (conf=%f, left=%d, rule=%d)' % (left, right, someVal[0], someVal[1], someVal[2]) )
-    return ruleList
+    
+    return (ruleList, topTen)
+
+# For Fun!!!
+def get_top_ten(rules: dict) -> list:
+    flattened = ((outerkey, innerkey, value) for (outerkey, innerdict) in rules.items() for (innerkey, value) in innerdict.items())
+    topTen = nlargest(10, flattened, key = itemgetter(2))
+    return topTen
