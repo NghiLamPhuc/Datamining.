@@ -12,6 +12,11 @@ def get_unique_item_dict(inputDict: dict) -> dict:
                 uniqueItem[item] += 1
     return uniqueItem
 
+def get_total_items(inputDict: dict) -> int:
+    count = 0
+    for (id, items) in inputDict.items():
+        count += len(items) - 1
+    return count
 # HÀM LẤY TẬP PHỔ BIẾN 1 ITEM.
 # Đếm theo item_list, duyệt từng dòng inputDict, nếu item xuất hiện >= số lần cần thiết, lấy.
 # oneItemSet là list lớn, chứa các list nhỏ, mỗi list nhỏ là 1_itemset.
@@ -119,17 +124,8 @@ def get_all_possible_itemset(inputDict: dict, minsup: float) -> list:
 # Đầu tiên, lấy tất cả tập phủ phổ biến.
 # Sau đó bỏ các tập bị tập khác phủ.
 def apriori(inputDict: dict, minsup: float) -> list:
-    allItemSet = list()
     allFrequentItemSet = list()
-    
-    preItemSet = get_one_itemSet(inputDict, minsup)
-    allItemSet = preItemSet.copy()
-    
-    while len(preItemSet) >= 1:
-        nextItemSet = get_k_1_itemSet(inputDict, preItemSet, minsup)
-        for itemSet in nextItemSet:
-            allItemSet.append(itemSet)
-        preItemSet = nextItemSet
+    allItemSet = get_all_possible_itemset(inputDict, minsup)
     
     if not allItemSet:
         print('Khong co itemset thoa man min_supp.')
