@@ -62,7 +62,7 @@ def calc_rule_conf(inputDict: dict, cLeft: int, rule: list) -> (float, int):
 # subList -> tat ca cac luat da sinh ra tu frequentItemSet
 # Duyet qua subList, neu 2 sub bat ki giao nhau >= 1 phan tu, thi luat bi trung -> loa.i.
 # Neu 2 sub giao nhau = ro^~ng. Tinh conf.
-def get_strong_rule(inputDict: dict, subList: list, min_conf: float) -> list:
+def get_strong_rule(inputDict: dict, subList: list, min_conf: float) -> defaultdict(dict):
     strongRules = defaultdict(dict)
     counted = dict()
     for eachSub in subList:
@@ -85,6 +85,7 @@ def get_strong_rule(inputDict: dict, subList: list, min_conf: float) -> list:
                         strongRules[left][right] = [conf, cLeft, cRule]
                         
     return strongRules
+
 # Ham lay danh sach cac tap con co the sinh ra luat.
 # subRule: tat ca left, right.
 def get_sub_make_rule(frequentItemSet: list(list())) -> list:
@@ -97,18 +98,39 @@ def get_sub_make_rule(frequentItemSet: list(list())) -> list:
                 subRule.append(sL)
     return subRule
 
+# Hàm ở trên, lấy tất cả tập freqItemSet xẻ ra các tập con.
+# Hàm này sẽ xẻ tập con theo từng ItemSet trong freqItemSet.
+def get_sub_make_rule_2(freqItemSetX: list()) -> list:
+    return get_subsets(freqItemSetX)
+
 # Hàm lấy tất cả các strong rules.
 def get_all_strong_rule(inputDict: dict, frequentItemSet: list(list()), min_conf: float) -> list:
     ruleList = list()
     subRules = get_sub_make_rule(frequentItemSet)
-    rulesDisplay = get_strong_rule(inputDict, subRules, min_conf)
-    topTen = get_top_ten(rulesDisplay)
-    for (left, rights) in rulesDisplay.items():
+    rules = get_strong_rule(inputDict, subRules, min_conf)
+    topTen = get_top_ten(rules)
+    for (left, rights) in rules.items():
         for (right, someVal) in rights.items():
             ruleList.append('[ %s ] -> [ %s ]: (conf=%f, left=%d, rule=%d)' % (left, right, someVal[0], someVal[1], someVal[2]) )
     
     return (ruleList, topTen)
+# Hàm ở trên, bị lỗi -> xét các kết hợp, mặc dù chúng không cùng ItemSet.
+# Hàm này sửa lỗi đó. Chạy thử thôi. Chưa chắc đúng nên còn cmt ở đây. Éc Éc.
+def get_all_strong_rule_2(inputDict: dict, frequentItemSet: list(list()), min_conf: float) -> list:
+    ruleList = list()
+    allRules = defaultdict(dict)
+    for itemSet in frequentItemSet:
+        subRules = get_sub_make_rule_2(itemSet)
+        rules = get_strong_rule(inputDict, subRules, min_conf)
+        for (left, rights) in rules.items():
+            allRules[left] = rights
 
+    topTen = get_top_ten(allRules)
+    for (left, rights) in allRules.items():
+        for (right, someVal) in rights.items():
+            ruleList.append('[ %s ] -> [ %s ]: (conf=%f, left=%d, rule=%d)' % (left, right, someVal[0], someVal[1], someVal[2]) )
+    
+    return (ruleList, topTen)
 # For Fun!!!
 def get_top_ten(rules: dict) -> list:
     flattened = ((outerkey, innerkey, value) for (outerkey, innerdict) in rules.items() for (innerkey, value) in innerdict.items())
