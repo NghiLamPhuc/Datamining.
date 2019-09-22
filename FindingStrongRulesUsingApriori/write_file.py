@@ -10,8 +10,8 @@ def list_to_txt_with_last_comma(List: list, folderName, name):
     with open(folderName + name, 'w', encoding = 'utf-8') as fout:
         for itemSet in List:
             for index in range(len(itemSet) - 1):
-                fout.write('%s, ' % itemSet[index] )
-            fout.write('%s' % itemSet[-1] )
+                fout.write('{0}, '.format(itemSet[index]) )
+            fout.write('{0}'.format(itemSet[-1]) )
             fout.write('\n')
 
 def list_to_txt(List: list, folderName, name):
@@ -21,8 +21,8 @@ def list_to_txt(List: list, folderName, name):
         return
   
     with open(folderName + name, 'w', encoding = 'utf-8') as fout:
-        for itemSet in List:
-            fout.write('%s\n' % itemSet )
+        for item in List:
+            fout.write('{0}\n'.format(item))
 
 def dict_to_txt(Dict: dict, folderName, name):
     make_folder.create_folder(folderName)
@@ -34,6 +34,6 @@ def dict_to_txt(Dict: dict, folderName, name):
         for (key, values) in Dict.items():
             row = ''
             for indexItem in range(len(values) - 1):
-                fout.write('%s,' % values[indexItem] )
-            fout.write('%s' % values[-1] )
+                fout.write('{0},'.format(values[indexItem]) )
+            fout.write('{0}'.format(values[-1]) )
             fout.write('\n')
