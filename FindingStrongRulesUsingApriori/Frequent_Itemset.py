@@ -83,7 +83,7 @@ def check_in_list(List: list, candidate: list) -> bool:
 def check_infrequent_subset(kItemSet: list(list()), possibleSet: list) -> bool:
     k_1 = len(possibleSet)
     for i in range(k_1):
-        iSub = possibleSet[:i] + possibleSet[i+1:]
+        iSub = sorted(possibleSet[:i] + possibleSet[i+1:])
         if iSub not in kItemSet:
             return True
     return False
