@@ -6,8 +6,9 @@ import write_file
 from datetime import datetime
 import os
 
-def get_FIS(inputDict: dict, minsup: float, nameFile) -> int:
-    maxItemSet = Frequent_Itemset.apriori(inputDict, minsup)
+def get_FIS(pos_IS: list, minsup: float, nameFile) -> int:
+    
+    maxItemSet = Frequent_Itemset.apriori(pos_IS, minsup)
     if maxItemSet:
         write_file.list_to_txt_with_last_comma(maxItemSet, './RESULT/Frequent_ItemSet_minsup_' + str(minsup) + '/', 'FIS_' + nameFile)
         return 1
@@ -15,14 +16,14 @@ def get_FIS(inputDict: dict, minsup: float, nameFile) -> int:
         #print('Không có tập phổ biến tối đại.')
         return 0
 
-def get_possile_itemset(inputDict: dict, minsup: float, nameFile) -> int:
+def get_possile_itemset(inputDict: dict, minsup: float, nameFile) -> list:
     allPosItemSet = Frequent_Itemset.get_all_possible_itemset(inputDict, minsup)
     if allPosItemSet:
         write_file.list_to_txt_with_last_comma(allPosItemSet, './RESULT/Possible_ItemSet_minsup_' + str(minsup) + '/', 'Pos_' + nameFile)
-        return 1
+        return allPosItemSet
     else:
         #print('Không có tập phổ biến.')
-        return 0
+        return allPosItemSet
 
 def get_SR(inputDict: dict, FISDir, FISName, minconf: float, minsupp: float):
     frequentItemSet = read_file.read_lines_to_list(FISDir, FISName, ', ')
@@ -34,8 +35,8 @@ def run(inputDict: dict, minsupp: float, minconf: float, nameFile):
     ## Chay buoc 1.
     itemset = get_possile_itemset(inputDict, minsupp, nameFile)
     freqitemset = list()
-    if itemset == 1:
-        freqitemset = get_FIS(inputDict, minsupp, nameFile)
+    if itemset:
+        freqitemset = get_FIS(itemset, minsupp, nameFile)
     else:
         print('Không có tập phủ phổ biến!')
     
@@ -74,7 +75,7 @@ def main():
     #     run(inputDict, minsupp, minconf, nameFile)
     
     ## Chạy plants.txt
-    indexInput = nameFileList.index('plants.txt')
+    indexInput = nameFileList.index('baitapbuoi2.txt')
     nameFile = nameFileList[indexInput]
     print(nameFile)
 
