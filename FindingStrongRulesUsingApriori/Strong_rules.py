@@ -111,7 +111,8 @@ def get_all_strong_rule(inputDict: dict, frequentItemSet: list(list()), min_conf
     topTen = get_top_ten(rules)
     for (left, rights) in rules.items():
         for (right, someVal) in rights.items():
-            ruleList.append('[ %s ] -> [ %s ]: (conf=%f, left=%d, rule=%d)' % (left, right, someVal[0], someVal[1], someVal[2]) )
+            # ruleList.append('[ %s ] -> [ %s ]: (conf=%f, left=%d, rule=%d)' % (left, right, someVal[0], someVal[1], someVal[2]) )
+            ruleList.append(' %s -> %s: (conf=%f, left=%d, rule=%d)' % (left, right, someVal[0], someVal[1], someVal[2]) )
     
     return (ruleList, topTen)
 # Hàm ở trên, bị lỗi -> xét các kết hợp, mặc dù chúng không cùng ItemSet.
@@ -128,7 +129,7 @@ def get_all_strong_rule_2(inputDict: dict, frequentItemSet: list(list()), min_co
     topTen = get_top_ten(allRules)
     for (left, rights) in allRules.items():
         for (right, someVal) in rights.items():
-            ruleList.append('[ %s ] -> [ %s ]: (conf=%f, left=%d, rule=%d)' % (left, right, someVal[0], someVal[1], someVal[2]) )
+            ruleList.append(' %s -> %s: (conf=%f, left=%d, rule=%d)' % (left, right, someVal[0], someVal[1], someVal[2]) )
     
     return (ruleList, topTen)
 # For Fun!!!
