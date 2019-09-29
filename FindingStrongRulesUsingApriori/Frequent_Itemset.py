@@ -123,9 +123,9 @@ def get_all_possible_itemset(inputDict: dict, minsup: float) -> list:
 # Hàm lấy tất cả tập phủ phổ biến.
 # Đầu tiên, lấy tất cả tập phủ phổ biến.
 # Sau đó bỏ các tập bị tập khác phủ.
-def apriori(inputDict: dict, minsup: float) -> list:
+def apriori(allItemSet: list, minsup: float) -> list:
     allFrequentItemSet = list()
-    allItemSet = get_all_possible_itemset(inputDict, minsup)
+    # allItemSet = get_all_possible_itemset(inputDict, minsup)
     
     if not allItemSet:
         print('Khong co itemset thoa man min_supp.')
