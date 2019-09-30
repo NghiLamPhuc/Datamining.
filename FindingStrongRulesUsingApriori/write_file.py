@@ -34,6 +34,6 @@ def dict_to_txt(Dict: dict, folderName, name):
         for (key, values) in Dict.items():
             row = ''
             for indexItem in range(len(values) - 1):
-                fout.write('{0},'.format(values[indexItem]) )
+                fout.write('{0}, '.format(values[indexItem]) )
             fout.write('{0}'.format(values[-1]) )
             fout.write('\n')

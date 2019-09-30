@@ -1,26 +1,60 @@
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 import read_file, write_file, Frequent_Itemset, Strong_rules, make_folder
+from datetime import datetime
 
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MyWindow, self).__init__()
-        uic.loadUi('aprioriQTGUI.ui', self)
+        uic.loadUi('GUI.ui', self)
         
-        self.btnLoad.clicked.connect(self.on_Load_clicked)
+        openIcon = QtGui.QIcon('./GUIimage/openIcon')
+        saveIcon = QtGui.QIcon('./GUIimage/saveIcon')
+        self.btnImport.setIcon(openIcon)
+        self.btnExport.setIcon(saveIcon)
+
         self.btnApriori.clicked.connect(self.on_Apriori_clicked)
         self.btnSave.clicked.connect(self.on_Save_clicked)
-        self.lineEditMinsupp.setText('0.3')
-        self.lineEditMinconf.setText('1.0')
+        self.btnImport.clicked.connect(self.on_Import_clicked)
+        self.btnExport.clicked.connect(self.on_Export_clicked)
+        self.doubleSpinBoxMinsupp.setValue(0.30)
+        self.doubleSpinBoxMinconf.setValue(1.00)
+    
+    def on_Export_clicked(self):
+        inputDir = './input/'
+        (dataPath, _) = QtWidgets.QFileDialog.getSaveFileName(None, 'Save File', inputDir, '*.txt')
+        if dataPath:
+            data = self.plainTextInput.toPlainText()
+            with open(dataPath, 'w', encoding = 'utf-8') as f:
+                f.write(data)
+
+    def on_Import_clicked(self):
+        self.plainTextInput.clear()
+        inputDir = './input/'
+        (dataPath, _) = QtWidgets.QFileDialog.getOpenFileName(None, 'Open File', inputDir, '*.txt')
+        
+        if dataPath:
+            with open(dataPath, 'r', encoding = 'utf-8') as f:
+                count = 0
+                for line in f:
+                    row = '{}'.format(line)
+                    count += 1
+                    self.plainTextInput.insertPlainText(row)
+            self.labelInput.setText('Có {} dòng.'.format(count) )
+            self.labelLog.setText('{}'.format(dataPath.split('/')[-1]) )
 
     def on_Save_clicked(self):        
-        minsup = self.lineEditMinsupp.text()
-        minconf = self.lineEditMinconf.text()
-        outDir = './OUTPUT/minsup_{}_minconf_{}/'.format(minsup, minconf)
+        minsupp = float(self.doubleSpinBoxMinsupp.text())
+        minconf = float(self.doubleSpinBoxMinconf.text())
+        inputNameDir = self.labelLog.text()
+        inputName = inputNameDir.split('/')[-1]
+        
+        outDir = './OUTPUT/minsup_{}_minconf_{}/{}/'.format(minsupp, minconf, inputName)
         freqISName = 'Tap_Phu_Pho_Bien.txt'
         maxISName = 'Tap_Phu_Toi_Dai.txt'
         rulesName = 'Luat_Ket_Hop.txt'
         topTenName = '10_Luat_conf_Cao_Nhat.txt'
         make_folder.create_folder(outDir)
+        
         with open(outDir + freqISName, 'w', encoding = 'utf-8') as freqFile:
             freqFile.write(str(self.plainTextFreqIS.toPlainText()))
         
@@ -33,19 +67,8 @@ class MyWindow(QtWidgets.QMainWindow):
         with open(outDir + topTenName, 'w', encoding = 'utf-8') as topTenFile:
             topTenFile.write(str(self.plainTextTopten.toPlainText()))
         
-
-    def on_Load_clicked(self):
-        self.plainTextInput.clear()
-        inputDir = './input/'
-        fileName = 'baitapbuoi2.txt'
-        f = open(inputDir + fileName, 'r', encoding = 'utf-8')
-        count = 0
-        for line in f:
-            row = '{}'.format(line)
-            count += 1
-            self.plainTextInput.insertPlainText(row)
-        self.labelInput.setText('Có {} dòng.'.format(count) )
-        f.close()
+        # self.labelLog.setText('Đã lưu.')
+        
     
     def on_Apriori_clicked(self):
         # Plain Text 2
@@ -54,11 +77,11 @@ class MyWindow(QtWidgets.QMainWindow):
         self.plainTextRules.clear()
         self.plainTextTopten.clear()
 
-        minsup = float(self.lineEditMinsupp.text())
-        minconf = float(self.lineEditMinconf.text())
+        minsupp = float(self.doubleSpinBoxMinsupp.text())
+        minconf = float(self.doubleSpinBoxMinconf.text())
         inputText = self.plainTextInput.toPlainText()
         inputDict = read_file.str_to_dict(inputText, ', ')
-        freqISList = Frequent_Itemset.get_all_possible_itemset(inputDict, minsup)
+        freqISList = Frequent_Itemset.get_all_possible_itemset(inputDict, minsupp)
         if not freqISList:
             self.plainTextFreqIS.insertPlainText('Không có tập phủ phổ biến.')
         else:
@@ -72,8 +95,7 @@ class MyWindow(QtWidgets.QMainWindow):
             self.labelFreqIS.setText('Có {} tập phủ phổ biến.'.format(len(freqISList)) )
 
         # Plain Text 2
-            # self.plainTextMaxIS.clear()
-            maxISList = Frequent_Itemset.apriori(freqISList, minsup)
+            maxISList = Frequent_Itemset.apriori(freqISList, minsupp)
             if maxISList:
                 for iMax in maxISList:
                     tempStr = ''
@@ -84,15 +106,12 @@ class MyWindow(QtWidgets.QMainWindow):
                     self.plainTextMaxIS.insertPlainText(row)
                 self.labelMaxIS.setText('Có {} tập phủ phổ biến tối đại.'.format(len(maxISList)) )
         # Plain Text 3
-                # self.plainTextRules.clear()
                 (ruleList, topTenRules) = Strong_rules.get_all_strong_rule_2(inputDict, maxISList, minconf)
                 
                 if ruleList:
                     for rule in ruleList:
                         row = '{}\n'.format(rule)
                         self.plainTextRules.insertPlainText(row)
-                    
-                    self.plainTextTopten.insertPlainText('\t\t10 luật tỉ lệ conf cao nhất.\n')
                     
                     for rule10 in topTenRules:
                         row = '{}\n'.format(rule10)
@@ -105,9 +124,12 @@ class MyWindow(QtWidgets.QMainWindow):
 
 if __name__ == '__main__':
     import sys
+    start = datetime.now()
+
     app = QtWidgets.QApplication(sys.argv)
     window = MyWindow()
     window.setWindowTitle('Apriori')
     window.show()
     sys.exit(app.exec_())
 
+    print(datetime.now() - start)
