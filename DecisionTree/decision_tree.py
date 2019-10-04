@@ -68,22 +68,27 @@ class DecisionTree():
 			labelIndexsCount[self.labelIndexs.index(self.labels[sid])] += 1
 		return self.labelIndexs[labelIndexsCount.index(max(labelIndexsCount))]
 
-
+	# attributeNames List tên giá trị của thuộc tính đang xét.
+    # vd: outlook có 3 giá trị sunny, rainy, overcast
+    # attributeNamesCount List đếm lần xuất hiện từng giá trị của thuộc tính trong inputdata
+    # vd sunny có 5, overcast có 4, rainy có 5.
+    # attributeNameIds List() lớn chứa các list nhỏ: các index của dòng có giá trị của thuộc tính đang xét.
+    # vd: sunny ở dòng 1,2,8,9,11 rainy ở dòng 4,5,6,10,14 overcast ở dòng 3,7,12,13
 	def getInformationGain(self, sampleIds: list, attributeId: int) -> float:#, dict):
 		gain = self.getEntropy(sampleIds)
-		attributeVals = list()
-		attributeValsCount = list()
-		attributeValsIds = list() # Luu danh sach cac row ung voi attributeVals
+		attributeNames = list()
+		attributeNamesCount = list()
+		attributeNamesIds = list() # Luu danh sach cac row ung voi attributeNames
 		for sid in sampleIds:
 			val = self.sample[sid][attributeId]
-			if val not in attributeVals:
-				attributeVals.append(val)
-				attributeValsCount.append(0)
-				attributeValsIds.append([])
-			vid = attributeVals.index(val)
-			attributeValsCount[vid] += 1
-			attributeValsIds[vid].append(sid)
-		for (vc, vids) in zip(attributeValsCount, attributeValsIds):
+			if val not in attributeNames:
+				attributeNames.append(val)
+				attributeNamesCount.append(0)
+				attributeNamesIds.append([])
+			vid = attributeNames.index(val)
+			attributeNamesCount[vid] += 1
+			attributeNamesIds[vid].append(sid)
+		for (vc, vids) in zip(attributeNamesCount, attributeNamesIds):
 			gain -= vc/len(sampleIds) * self.getEntropy(vids)
 		return gain
 
@@ -95,7 +100,7 @@ class DecisionTree():
 		
 		for attId in range(len(attributeIds)):
 			attributesEntropy[attId] = self.getInformationGain(sampleIds, attributeIds[attId])
-			logAttrEntr[self.attributes[attId]] = attributesEntropy[attId]
+			logAttrEntr[self.attributes[attributeIds[attId]]] = attributesEntropy[attId]
 			
 		maxId = attributeIds[attributesEntropy.index(max(attributesEntropy))]
 		
@@ -154,8 +159,7 @@ class DecisionTree():
 				if len(attributeIds) > 0 and bestAttrId in attributeIds:
 					toRemove = attributeIds.index(bestAttrId)
 					attributeIds.pop(toRemove)
-				child.next = self.id3Generator(
-					childSampleIds, attributeIds, child.next)
+				child.next = self.id3Generator(childSampleIds, attributeIds, child.next)
 		
 		return root
 
