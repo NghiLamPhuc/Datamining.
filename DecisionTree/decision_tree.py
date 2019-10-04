@@ -3,42 +3,41 @@ import math
 from collections import deque
 
 
-class Node(object):
+class Node():
 	def __init__(self):
 		self.name = None
 		self.next = None
 		self.childs = None
 		self.value = None
 
-
-class DecisionTree(object):
+class DecisionTree():
 	def __init__(self, sample, attributes, labels):
 		self.sample = sample
 		self.attributes = attributes
 		self.labels = labels
-		self.labelCodes = None
-		self.labelCodesCount = None
-		self.initLabelCodes()
+		self.labelIndexs = None
+		self.labelIndexsCount = None
+		self.initLabelIndexs()
 		self.root = None
 		self.entropy = self.getEntropy([x for x in range(len(self.labels))])
 
 
-	def initLabelCodes(self):
-		self.labelCodes = []
-		self.labelCodesCount = []
+	def initLabelIndexs(self):
+		self.labelIndexs = list()
+		self.labelIndexsCount = list()
 		for l in self.labels:
-			if l not in self.labelCodes:
-				self.labelCodes.append(l)
-				self.labelCodesCount.append(0)
-			self.labelCodesCount[self.labelCodes.index(l)] += 1
+			if l not in self.labelIndexs:
+				self.labelIndexs.append(l)
+				self.labelIndexsCount.append(0)
+			self.labelIndexsCount[self.labelIndexs.index(l)] += 1
 
 
-	def getLabelCodeId(self, sampleId: int) -> str:
-		return self.labelCodes.index(self.labels[sampleId])
+	def getLabelIndexId(self, sampleId: int) -> str:
+		return self.labelIndexs.index(self.labels[sampleId])
 
 
 	def getAttributeValues(self, sampleIds: list, attributeId: int) -> list:
-		vals = []
+		vals = list()
 		for sid in sampleIds:
 			val = self.sample[sid][attributeId]
 			if val not in vals:
@@ -47,10 +46,12 @@ class DecisionTree(object):
 
 
 	def getEntropy(self, sampleIds: list) -> float:
-		entropy = 0
-		labelCount = [0] * len(self.labelCodes)
+		entropy = 0.0
+		labelCount = list()
+		[labelCount.append(0) for _ in range(len(self.labelIndexs))]
+		
 		for sid in sampleIds:
-			labelCount[self.getLabelCodeId(sid)] += 1
+			labelCount[self.getLabelIndexId(sid)] += 1
 		for lv in labelCount:
 			if lv != 0:
 				entropy += -lv/len(sampleIds) * math.log(lv/len(sampleIds), 2)
@@ -60,17 +61,19 @@ class DecisionTree(object):
 
 
 	def getDominantLabel(self, sampleIds: list) -> str:
-		labelCodesCount = [0] * len(self.labelCodes)
+		labelIndexsCount = list()
+		[labelIndexsCount.append(0) for _ in range(len(self.labelIndexs))]
+
 		for sid in sampleIds:
-			labelCodesCount[self.labelCodes.index(self.labels[sid])] += 1
-		return self.labelCodes[labelCodesCount.index(max(labelCodesCount))]
+			labelIndexsCount[self.labelIndexs.index(self.labels[sid])] += 1
+		return self.labelIndexs[labelIndexsCount.index(max(labelIndexsCount))]
 
 
-	def getInformationGain(self, sampleIds: list, attributeId: int) -> float:
+	def getInformationGain(self, sampleIds: list, attributeId: int) -> float:#, dict):
 		gain = self.getEntropy(sampleIds)
-		attributeVals = []
-		attributeValsCount = []
-		attributeValsIds = []
+		attributeVals = list()
+		attributeValsCount = list()
+		attributeValsIds = list() # Luu danh sach cac row ung voi attributeVals
 		for sid in sampleIds:
 			val = self.sample[sid][attributeId]
 			if val not in attributeVals:
@@ -80,20 +83,28 @@ class DecisionTree(object):
 			vid = attributeVals.index(val)
 			attributeValsCount[vid] += 1
 			attributeValsIds[vid].append(sid)
-		for vc, vids in zip(attributeValsCount, attributeValsIds):
+		for (vc, vids) in zip(attributeValsCount, attributeValsIds):
 			gain -= vc/len(sampleIds) * self.getEntropy(vids)
 		return gain
 
 
-	def getAttributeMaxInformationGain(self, sampleIds: list, attributeIds: list) -> (str, int, float, list):
-		attributesEntropy = [0] * len(attributeIds)
-		for i, attId in zip(range(len(attributeIds)), attributeIds):
-			attributesEntropy[i] = self.getInformationGain(sampleIds, attId)
+	def getAttributeMaxInformationGain(self, sampleIds: list, attributeIds: list) -> (str, int, float, dict):
+		logAttrEntr = dict()
+		attributesEntropy = list()
+		[attributesEntropy.append(0) for _ in range(len(attributeIds))]
+		
+		for attId in range(len(attributeIds)):
+			attributesEntropy[attId] = self.getInformationGain(sampleIds, attributeIds[attId])
+			logAttrEntr[self.attributes[attId]] = attributesEntropy[attId]
+			
 		maxId = attributeIds[attributesEntropy.index(max(attributesEntropy))]
-		return (self.attributes[maxId], maxId, max(attributesEntropy), attributesEntropy)
+		
+		return (self.attributes[maxId], maxId, max(attributesEntropy), logAttrEntr)
 
 
 	def isSingleLabeled(self, sampleIds: list) -> bool:
+		if not self.labels:
+    			return False
 		label = self.labels[sampleIds[0]]
 		for sid in sampleIds:
 			if self.labels[sid] != label:
@@ -108,49 +119,54 @@ class DecisionTree(object):
 	def id3(self):
 		sampleIds = [x for x in range(len(self.sample))]
 		attributeIds = [x for x in range(len(self.attributes))]
-		self.root = self.id3Recv(sampleIds, attributeIds, self.root)
+		self.root = self.id3Generator(sampleIds, attributeIds, self.root)
 
 
-	def id3Recv(self, sampleIds: list, attributeIds: list, root: Node) -> Node:
+	def id3Generator(self, sampleIds: list, attributeIds: list, root: Node) -> Node:
 		root = Node()
 		if self.isSingleLabeled(sampleIds):
 			root.name = self.labels[sampleIds[0]]
 			return root
-		# print(attributeIds)
+
 		if len(attributeIds) == 0:
 			root.name = self.getDominantLabel(sampleIds)
 			return root
-		bestAttrName, bestAttrId, maxInfoGainValue, entropyList = self.getAttributeMaxInformationGain(
-			sampleIds, attributeIds)
-		print(entropyList)
-		# print(bestAttrName)
+		(bestAttrName, bestAttrId, maxInfoGainValue, infoGainDict) = self.getAttributeMaxInformationGain(sampleIds, attributeIds)
+		
+		print(infoGainDict)
+		
 		root.name = bestAttrName
 		root.value = maxInfoGainValue
-		root.childs = []  # Create list of children
+		root.childs = list()
 		for value in self.getAttributeValues(sampleIds, bestAttrId):
-			# print(value)
 			child = Node()
 			child.name = value
-			root.childs.append(child)  # Append new child node to current
+			
+			root.childs.append(child)
 			# root
-			childSampleIds = []
+			childSampleIds = list()
 			for sid in sampleIds:
 				if self.sample[sid][bestAttrId] == value:
 					childSampleIds.append(sid)
 			if len(childSampleIds) == 0:
 				child.next = self.getDominantLabel(sampleIds)
 			else:
-				# print(bestAttrName, bestAttrId)
-				# print(attributeIds)
 				if len(attributeIds) > 0 and bestAttrId in attributeIds:
 					toRemove = attributeIds.index(bestAttrId)
 					attributeIds.pop(toRemove)
-				child.next = self.id3Recv(
+				child.next = self.id3Generator(
 					childSampleIds, attributeIds, child.next)
+		
 		return root
 
+	def printRule(self):
+		if self.root:
+			while(self.root.next):
+				print(self.root.name)
+				self.root = self.root.next
 
 	def printTree(self):
+		listAns = list()
 		ans = ''
 		if self.root:
 			roots = deque()
@@ -158,11 +174,13 @@ class DecisionTree(object):
 			while len(roots) > 0:
 				root = roots.popleft()
 				if root.value != None:
-					print('({}): {}'.format(root.name, round(root.value, 3)))
+					print('({}): {}'.format(root.name, round(root.value, 5)))
 					ans += root.name + ','
 				else:
-					print('({})'.format(root.name))
-					ans += '->' + root.name
+					print('{}'.format(root.name))
+					ans += ',' + root.name
+					listAns.append(ans)
+					ans = ''
 				if root.childs:
 					for child in root.childs:
 						print('({})'.format(child.name))
@@ -171,7 +189,7 @@ class DecisionTree(object):
 				elif root.next:
 					print(root.next)
 					ans += root.name + ','
-		return ans
+		return listAns
 
 
 def test():
@@ -187,16 +205,17 @@ def test():
 	for i in range(len(sample)):
 		sample[i] = re.sub('\d+,', '', sample[i])
 		sample[i] = sample[i].strip().split(',')
-	labels = []
+	labels = list()
 	for s in sample:
 		labels.append(s.pop())
 	# print(*sample, sep = '\n')
 	# print(labels)
 	decisionTree = DecisionTree(sample, attributes, labels)
-	print("System entropy {}".format(round(decisionTree.entropy, 3)))
+	print("entropy(S) = {}".format(round(decisionTree.entropy, 3)))
 
 	decisionTree.id3()
 	print(decisionTree.printTree())
+	decisionTree.printRule()
 
 
 if __name__ == '__main__':
