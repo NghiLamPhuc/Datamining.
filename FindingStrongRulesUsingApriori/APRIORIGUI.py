@@ -1,24 +1,52 @@
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 import read_file, write_file, Frequent_Itemset, Strong_rules, make_folder
 from datetime import datetime
+import example
+import sys
 
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MyWindow, self).__init__()
         uic.loadUi('GUI.ui', self)
         
+
         openIcon = QtGui.QIcon('./GUIimage/openIcon')
         saveIcon = QtGui.QIcon('./GUIimage/saveIcon')
+        createDataIcon = QtGui.QIcon('./GUIimage/randomFileIcon')
+        runIcon = QtGui.QIcon('./GUIimage/runIcon')
+        resIcon = QtGui.QIcon('./GUIimage/saveResIcon')
+        pixmapLogo = QtGui.QPixmap('./GUIimage/logoIcon')
+        
         self.btnImport.setIcon(openIcon)
+        self.btnSave.setIcon(resIcon)
         self.btnExport.setIcon(saveIcon)
+        self.btnGenerateData.setIcon(createDataIcon)
+        self.btnApriori.setIcon(runIcon)
+        self.labelLogo.setPixmap(pixmapLogo)
 
         self.btnApriori.clicked.connect(self.on_Apriori_clicked)
         self.btnSave.clicked.connect(self.on_Save_clicked)
         self.btnImport.clicked.connect(self.on_Import_clicked)
         self.btnExport.clicked.connect(self.on_Export_clicked)
+        self.btnGenerateData.clicked.connect(self.on_Generate_clicked)
+
         self.doubleSpinBoxMinsupp.setValue(0.30)
         self.doubleSpinBoxMinconf.setValue(1.00)
     
+    def on_Generate_clicked(self):
+        example.create_data()
+        self.plainTextInput.clear()
+        fileDir = './input/generate.txt'
+        if fileDir:
+            with open(fileDir, 'r', encoding = 'utf-8') as f:
+                count = 0
+                for line in f:
+                    row = '{}'.format(line)
+                    count += 1
+                    self.plainTextInput.insertPlainText(row)
+            self.labelInput.setText('Có {} dòng.'.format(count) )
+            self.labelInputName.setText('{}'.format(fileDir.split('/')[-1]) )
+
     def on_Export_clicked(self):
         inputDir = './input/'
         (dataPath, _) = QtWidgets.QFileDialog.getSaveFileName(None, 'Save File', inputDir, '*.txt')
@@ -40,37 +68,42 @@ class MyWindow(QtWidgets.QMainWindow):
                     count += 1
                     self.plainTextInput.insertPlainText(row)
             self.labelInput.setText('Có {} dòng.'.format(count) )
-            self.labelLog.setText('{}'.format(dataPath.split('/')[-1]) )
+            self.labelInputName.setText(dataPath.split('/')[-1])
 
     def on_Save_clicked(self):        
         minsupp = float(self.doubleSpinBoxMinsupp.text())
         minconf = float(self.doubleSpinBoxMinconf.text())
-        inputNameDir = self.labelLog.text()
-        inputName = inputNameDir.split('/')[-1]
-        
+        inputName = self.labelInputName.text()
         outDir = './OUTPUT/minsup_{}_minconf_{}/{}/'.format(minsupp, minconf, inputName)
         freqISName = 'Tap_Phu_Pho_Bien.txt'
         maxISName = 'Tap_Phu_Toi_Dai.txt'
         rulesName = 'Luat_Ket_Hop.txt'
         topTenName = '10_Luat_conf_Cao_Nhat.txt'
         make_folder.create_folder(outDir)
-        
+        freqIS = self.plainTextFreqIS.toPlainText()
+        maxIS = self.plainTextMaxIS.toPlainText()
+        rules = self.plainTextRules.toPlainText()
+        topTenRules = self.plainTextTopten.toPlainText()
+        # if freqISName == "" and maxIS == "" and rules == "" and topTenRules == "":
+        #     QtWidgets.QFileDialog.showEvent('Chưa có kết quả để lưu.')
+        # else:
         with open(outDir + freqISName, 'w', encoding = 'utf-8') as freqFile:
-            freqFile.write(str(self.plainTextFreqIS.toPlainText()))
+            freqFile.write(str(freqIS))
         
         with open(outDir + maxISName, 'w', encoding = 'utf-8') as maxFile:
-            maxFile.write(str(self.plainTextMaxIS.toPlainText()))
+            maxFile.write(str(maxIS))
 
         with open(outDir + rulesName, 'w', encoding = 'utf-8') as ruleFile:
-            ruleFile.write(str(self.plainTextRules.toPlainText()))
+            ruleFile.write(str(rules))
 
         with open(outDir + topTenName, 'w', encoding = 'utf-8') as topTenFile:
-            topTenFile.write(str(self.plainTextTopten.toPlainText()))
-        
+            topTenFile.write(str(topTenRules))
+    
         # self.labelLog.setText('Đã lưu.')
         
     
     def on_Apriori_clicked(self):
+        
         # Plain Text 2
         self.plainTextFreqIS.clear()
         self.plainTextMaxIS.clear()
@@ -81,7 +114,11 @@ class MyWindow(QtWidgets.QMainWindow):
         minconf = float(self.doubleSpinBoxMinconf.text())
         inputText = self.plainTextInput.toPlainText()
         inputDict = read_file.str_to_dict(inputText, ', ')
+       
         freqISList = Frequent_Itemset.get_all_possible_itemset(inputDict, minsupp)
+        maxISList = Frequent_Itemset.apriori(freqISList, minsupp)
+        (ruleList, topTenRules) = Strong_rules.get_all_strong_rule_2(inputDict, maxISList, minconf)
+        
         if not freqISList:
             self.plainTextFreqIS.insertPlainText('Không có tập phủ phổ biến.')
         else:
@@ -95,7 +132,7 @@ class MyWindow(QtWidgets.QMainWindow):
             self.labelFreqIS.setText('Có {} tập phủ phổ biến.'.format(len(freqISList)) )
 
         # Plain Text 2
-            maxISList = Frequent_Itemset.apriori(freqISList, minsupp)
+            # maxISList = Frequent_Itemset.apriori(freqISList, minsupp)
             if maxISList:
                 for iMax in maxISList:
                     tempStr = ''
@@ -106,7 +143,7 @@ class MyWindow(QtWidgets.QMainWindow):
                     self.plainTextMaxIS.insertPlainText(row)
                 self.labelMaxIS.setText('Có {} tập phủ phổ biến tối đại.'.format(len(maxISList)) )
         # Plain Text 3
-                (ruleList, topTenRules) = Strong_rules.get_all_strong_rule_2(inputDict, maxISList, minconf)
+                # (ruleList, topTenRules) = Strong_rules.get_all_strong_rule_2(inputDict, maxISList, minconf)
                 
                 if ruleList:
                     for rule in ruleList:
@@ -123,13 +160,13 @@ class MyWindow(QtWidgets.QMainWindow):
 
 
 if __name__ == '__main__':
-    import sys
-    start = datetime.now()
+    
+    
 
     app = QtWidgets.QApplication(sys.argv)
     window = MyWindow()
-    window.setWindowTitle('Apriori')
+    window.setWindowTitle('KHAI PHÁ LUẬT KẾT HỢP BẰNG APRIORI')
     window.show()
     sys.exit(app.exec_())
 
-    print(datetime.now() - start)
+    
