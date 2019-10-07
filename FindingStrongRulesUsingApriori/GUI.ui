@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
+ <author>NghiLam</author>
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>1060</width>
-    <height>875</height>
+    <height>924</height>
    </rect>
   </property>
   <property name="palette">
@@ -16,8 +23,8 @@
      <colorrole role="WindowText">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>170</red>
-        <green>170</green>
+        <red>177</red>
+        <green>157</green>
         <blue>255</blue>
        </color>
       </brush>
@@ -153,8 +160,8 @@
      <colorrole role="WindowText">
       <brush brushstyle="SolidPattern">
        <color alpha="255">
-        <red>170</red>
-        <green>170</green>
+        <red>177</red>
+        <green>157</green>
         <blue>255</blue>
        </color>
       </brush>
@@ -428,11 +435,14 @@
   <property name="windowTitle">
    <string>KHAI PHÁ LUẬT KẾT HỢP BẰNG APRIORI</string>
   </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
+  </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonIconOnly</enum>
   </property>
   <property name="tabShape">
-   <enum>QTabWidget::Triangular</enum>
+   <enum>QTabWidget::Rounded</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -922,9 +932,42 @@
        <item row="2" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
-          <widget class="QProgressBar" name="progressBar">
-           <property name="value">
-            <number>0</number>
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_9">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="labelLog">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <italic>true</italic>
+            </font>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
@@ -966,7 +1009,8 @@
     <property name="title">
      <string>Some</string>
     </property>
-    <addaction name="actionWhat_is_Apriori"/>
+    <addaction name="separator"/>
+    <addaction name="actionWhatIsApriori"/>
    </widget>
    <addaction name="menuWhat_is_Apriori"/>
   </widget>
@@ -974,6 +1018,11 @@
   <action name="actionWhat_is_Apriori">
    <property name="text">
     <string>What is Apriori?</string>
+   </property>
+  </action>
+  <action name="actionWhatIsApriori">
+   <property name="text">
+    <string>Apriori là gì?</string>
    </property>
   </action>
  </widget>

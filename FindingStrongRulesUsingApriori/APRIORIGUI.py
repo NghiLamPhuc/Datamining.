@@ -8,7 +8,6 @@ class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MyWindow, self).__init__()
         uic.loadUi('GUI.ui', self)
-        
 
         openIcon = QtGui.QIcon('./GUIimage/openIcon')
         saveIcon = QtGui.QIcon('./GUIimage/saveIcon')
@@ -30,7 +29,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.btnExport.clicked.connect(self.on_Export_clicked)
         self.btnGenerateData.clicked.connect(self.on_Generate_clicked)
 
-        self.doubleSpinBoxMinsupp.setValue(0.30)
+        self.doubleSpinBoxMinsupp.setValue(0.55)
         self.doubleSpinBoxMinconf.setValue(1.00)
     
     def on_Generate_clicked(self):
@@ -57,6 +56,10 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def on_Import_clicked(self):
         self.plainTextInput.clear()
+        self.plainTextFreqIS.clear()
+        self.plainTextMaxIS.clear()
+        self.plainTextRules.clear()
+        self.plainTextTopten.clear()
         inputDir = './input/'
         (dataPath, _) = QtWidgets.QFileDialog.getOpenFileName(None, 'Open File', inputDir, '*.txt')
         
@@ -80,93 +83,97 @@ class MyWindow(QtWidgets.QMainWindow):
         rulesName = 'Luat_Ket_Hop.txt'
         topTenName = '10_Luat_conf_Cao_Nhat.txt'
         make_folder.create_folder(outDir)
+
         freqIS = self.plainTextFreqIS.toPlainText()
         maxIS = self.plainTextMaxIS.toPlainText()
         rules = self.plainTextRules.toPlainText()
         topTenRules = self.plainTextTopten.toPlainText()
-        # if freqISName == "" and maxIS == "" and rules == "" and topTenRules == "":
-        #     QtWidgets.QFileDialog.showEvent('Chưa có kết quả để lưu.')
-        # else:
-        with open(outDir + freqISName, 'w', encoding = 'utf-8') as freqFile:
-            freqFile.write(str(freqIS))
-        
-        with open(outDir + maxISName, 'w', encoding = 'utf-8') as maxFile:
-            maxFile.write(str(maxIS))
 
-        with open(outDir + rulesName, 'w', encoding = 'utf-8') as ruleFile:
-            ruleFile.write(str(rules))
+        if freqIS == "" and maxIS == "" and rules == "" and topTenRules == "":
+            # QtWidgets.QFileDialog.showEvent(,'Chưa có kết quả để lưu.')
+            self.labelLog.setText('Chưa có kết quả.')
+        else:
+            with open(outDir + freqISName, 'w', encoding = 'utf-8') as freqFile:
+                freqFile.write(str(freqIS))
+            
+            with open(outDir + maxISName, 'w', encoding = 'utf-8') as maxFile:
+                maxFile.write(str(maxIS))
 
-        with open(outDir + topTenName, 'w', encoding = 'utf-8') as topTenFile:
-            topTenFile.write(str(topTenRules))
+            with open(outDir + rulesName, 'w', encoding = 'utf-8') as ruleFile:
+                ruleFile.write(str(rules))
+
+            with open(outDir + topTenName, 'w', encoding = 'utf-8') as topTenFile:
+                topTenFile.write(str(topTenRules))
     
-        # self.labelLog.setText('Đã lưu.')
+            self.labelLog.setText('Đã lưu.')
         
     
     def on_Apriori_clicked(self):
-        
-        # Plain Text 2
-        self.plainTextFreqIS.clear()
-        self.plainTextMaxIS.clear()
-        self.plainTextRules.clear()
-        self.plainTextTopten.clear()
-
-        minsupp = float(self.doubleSpinBoxMinsupp.text())
-        minconf = float(self.doubleSpinBoxMinconf.text())
-        inputText = self.plainTextInput.toPlainText()
-        inputDict = read_file.str_to_dict(inputText, ', ')
-       
-        freqISList = Frequent_Itemset.get_all_possible_itemset(inputDict, minsupp)
-        maxISList = Frequent_Itemset.apriori(freqISList, minsupp)
-        (ruleList, topTenRules) = Strong_rules.get_all_strong_rule_2(inputDict, maxISList, minconf)
-        
-        if not freqISList:
-            self.plainTextFreqIS.insertPlainText('Không có tập phủ phổ biến.')
+        if self.plainTextInput.toPlainText() == "":
+            self.labelLog.setText('Chưa tải dữ liệu lên.')
         else:
-            for iS in freqISList:
-                tempStr = ''
-                for item in range(len(iS) - 1):
-                    tempStr += iS[item] + ', '
-                tempStr += iS[-1]
-                row = '{}\n'.format(tempStr)
-                self.plainTextFreqIS.insertPlainText(row)
-            self.labelFreqIS.setText('Có {} tập phủ phổ biến.'.format(len(freqISList)) )
+            # Plain Text 2
+            self.plainTextFreqIS.clear()
+            self.plainTextMaxIS.clear()
+            self.plainTextRules.clear()
+            self.plainTextTopten.clear()
 
-        # Plain Text 2
-            # maxISList = Frequent_Itemset.apriori(freqISList, minsupp)
-            if maxISList:
-                for iMax in maxISList:
+            minsupp = float(self.doubleSpinBoxMinsupp.text())
+            minconf = float(self.doubleSpinBoxMinconf.text())
+            inputText = self.plainTextInput.toPlainText()
+            inputDict = read_file.str_to_dict(inputText, ', ')
+            
+            start = datetime.now()
+
+            freqISList = Frequent_Itemset.get_all_possible_itemset(inputDict, minsupp)
+            maxISList = Frequent_Itemset.apriori(freqISList, minsupp)
+            (ruleList, topTenRules) = Strong_rules.get_all_strong_rule_2(inputDict, maxISList, minconf)
+            
+            exeTime = (datetime.now() - start).total_seconds()
+            self.labelLog.setText(str(exeTime) + ' giây.')
+
+            if not freqISList:
+                self.labelLog.setText('Không có tập phủ phổ biến.')
+            else:
+                for iS in freqISList:
                     tempStr = ''
-                    for item in range(len(iMax) - 1):
-                        tempStr += iMax[item] + ', '
-                    tempStr += iMax[-1]
+                    for item in range(len(iS) - 1):
+                        tempStr += iS[item] + ', '
+                    tempStr += iS[-1]
                     row = '{}\n'.format(tempStr)
-                    self.plainTextMaxIS.insertPlainText(row)
-                self.labelMaxIS.setText('Có {} tập phủ phổ biến tối đại.'.format(len(maxISList)) )
-        # Plain Text 3
-                # (ruleList, topTenRules) = Strong_rules.get_all_strong_rule_2(inputDict, maxISList, minconf)
-                
-                if ruleList:
-                    for rule in ruleList:
-                        row = '{}\n'.format(rule)
-                        self.plainTextRules.insertPlainText(row)
+                    self.plainTextFreqIS.insertPlainText(row)
+                self.labelFreqIS.setText('Có {} tập phủ phổ biến.'.format(len(freqISList)) )
+
+            # Plain Text 2
+                # maxISList = Frequent_Itemset.apriori(freqISList, minsupp)
+                if maxISList:
+                    for iMax in maxISList:
+                        tempStr = ''
+                        for item in range(len(iMax) - 1):
+                            tempStr += iMax[item] + ', '
+                        tempStr += iMax[-1]
+                        row = '{}\n'.format(tempStr)
+                        self.plainTextMaxIS.insertPlainText(row)
+                    self.labelMaxIS.setText('Có {} tập phủ phổ biến tối đại.'.format(len(maxISList)) )
+            # Plain Text 3
+                    # (ruleList, topTenRules) = Strong_rules.get_all_strong_rule_2(inputDict, maxISList, minconf)
                     
-                    for rule10 in topTenRules:
-                        row = '{}\n'.format(rule10)
-                        self.plainTextTopten.insertPlainText(row)
-                    
-                    self.labelRules.setText('Có {} luật kết hợp.'.format(len(ruleList)) )
-
-
-
+                    if ruleList:
+                        for rule in ruleList:
+                            row = '{}\n'.format(rule)
+                            self.plainTextRules.insertPlainText(row)
+                        
+                        for rule10 in topTenRules:
+                            row = '{}\n'.format(rule10)
+                            self.plainTextTopten.insertPlainText(row)
+                        
+                        self.labelRules.setText('Có {} luật kết hợp.'.format(len(ruleList)) )
 
 if __name__ == '__main__':
-    
-    
-
     app = QtWidgets.QApplication(sys.argv)
+    app.setStyle('Fusion')
     window = MyWindow()
     window.setWindowTitle('KHAI PHÁ LUẬT KẾT HỢP BẰNG APRIORI')
     window.show()
     sys.exit(app.exec_())
 
-    
