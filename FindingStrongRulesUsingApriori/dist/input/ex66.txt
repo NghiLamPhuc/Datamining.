@@ -1,0 +1,5 @@
+r1, M, O, N, K, E, Y
+r2, D, O, N, K, E, Y
+r3, M, A, K, E
+r4, M, U, C, K, Y
+r5, C, O, O, K, I, E

@@ -1,0 +1,4 @@
+tran1, King’s-Crab, Sunset-Milk, Dairyland-Cheese, Best-Bread
+tran2, Best-Cheese, Dairyland-Milk, Goldenfarm-Apple, Tasty-Pie, Wonder-Bread
+tran3, Westcoast-Apple, Dairyland-Milk, Wonder-Bread, Tasty-Pie
+tran4, Wonder-Bread, Sunset-Milk, Dairyland-Cheese

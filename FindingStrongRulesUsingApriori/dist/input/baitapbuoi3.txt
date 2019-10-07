@@ -1,0 +1,6 @@
+id1, i1, i3, i4
+id2, i1, i3, i4
+id3, i3, i5
+id4, i1, i2, i4, i5
+id5, i1, i2, i4
+id6, i1, i2, i4, i5
