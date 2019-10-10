@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 import read_file, write_file, Frequent_Itemset, Strong_rules, make_folder
-from datetime import datetime
+from datetime import datetime, timedelta
 import example
 import sys
 
@@ -28,10 +28,11 @@ class MyWindow(QtWidgets.QMainWindow):
         self.btnImport.clicked.connect(self.on_Import_clicked)
         self.btnExport.clicked.connect(self.on_Export_clicked)
         self.btnGenerateData.clicked.connect(self.on_Generate_clicked)
-
+        
         self.doubleSpinBoxMinsupp.setValue(0.55)
         self.doubleSpinBoxMinconf.setValue(1.00)
     
+
     def on_Generate_clicked(self):
         example.create_data()
         self.plainTextInput.clear()
@@ -55,6 +56,13 @@ class MyWindow(QtWidgets.QMainWindow):
                 f.write(data)
 
     def on_Import_clicked(self):
+        self.labelLog.clear()
+        self.labelFreqIS.clear()
+        self.labelMaxIS.clear()
+        self.labelRules.clear()
+        self.labelInput.clear()
+        self.labelInputName.setText('Dữ liệu')
+
         self.plainTextInput.clear()
         self.plainTextFreqIS.clear()
         self.plainTextMaxIS.clear()
@@ -112,6 +120,7 @@ class MyWindow(QtWidgets.QMainWindow):
         if self.plainTextInput.toPlainText() == "":
             self.labelLog.setText('Chưa tải dữ liệu lên.')
         else:
+            # self.labelLog.setText('Chờ chút nheee.')
             # Plain Text 2
             self.plainTextFreqIS.clear()
             self.plainTextMaxIS.clear()
@@ -130,7 +139,8 @@ class MyWindow(QtWidgets.QMainWindow):
             (ruleList, topTenRules) = Strong_rules.get_all_strong_rule_2(inputDict, maxISList, minconf)
             
             exeTime = (datetime.now() - start).total_seconds()
-            self.labelLog.setText(str(exeTime) + ' giây.')
+            
+            self.labelLog.setText(str(timedelta(seconds = exeTime)))
 
             if not freqISList:
                 self.labelLog.setText('Không có tập phủ phổ biến.')

@@ -6,7 +6,7 @@ def create_data():
     
     transDict = dict()
     for row in range(1000):
-        numOfItem = random.randint(40, 50)
+        numOfItem = random.randint(20, 50)
         transList = list()
         transList.append(row)
         for col in range(numOfItem):
