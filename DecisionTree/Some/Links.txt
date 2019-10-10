@@ -1,0 +1,3 @@
+https://medium.com/machine-learning-guy/an-introduction-to-decision-tree-learning-id3-algorithm-54c74eb2ad55
+
+https://medium.com/@rakendd/decision-tree-from-scratch-9e23bcfb4928
