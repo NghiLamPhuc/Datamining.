@@ -14,3 +14,5 @@ Frequent_Itemset.py: Tìm các tập phủ phổ biến và tập phủ phổ bi
 Strong_rules.py: Tìm các luật thỏa mãn minimun confident.
 
 folder input chứa file input dạng txt.
+
+![App](screenshots/GiaodienKmeans.PNG)
